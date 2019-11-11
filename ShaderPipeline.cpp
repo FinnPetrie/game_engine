@@ -15,7 +15,7 @@ ShaderPipeline::ShaderPipeline(std::vector<std::string> paths, std::vector<GLenu
 
 
 bool ShaderPipeline::link(){
-    programID = glCreateProgram();
+    this->programID = glCreateProgram();
     for(Shader shader : shaders){
         glAttachShader(programID, shader.getShader());
     }
@@ -29,9 +29,24 @@ bool ShaderPipeline::link(){
         std::cout << "Linking failed" << std::endl;
         return false;
     }
+
+    detach();
+    deleteShaders();
+
     return true;
 }
 
+void ShaderPipeline::detach(){
+    for(Shader shader : shaders){
+        glDetachShader(programID, shader.getShader());
+    }
+}
+
+void ShaderPipeline::deleteShaders(){
+    for(Shader shader : shaders){
+        glDeleteShader(shader.getShader());
+    }
+}
 GLint ShaderPipeline::getProgram(){
     return programID;
 }
