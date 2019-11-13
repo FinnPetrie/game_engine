@@ -50,3 +50,9 @@ void ShaderPipeline::deleteShaders(){
 GLint ShaderPipeline::getProgram(){
     return programID;
 }
+
+void ShaderPipeline::sendMatrix(std::string name, glm::mat4 matrix){
+    GLint location = glGetUniformLocation(programID, name.c_str());
+    // std::cout << "Matrix " << name << " location : " << location << std::endl;
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}

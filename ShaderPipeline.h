@@ -1,6 +1,7 @@
 #ifndef SHADERPIPELINE_H_
 #define SHADERPIPELINE_H_
 #include "Shader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 class ShaderPipeline{
     private:
@@ -16,6 +17,7 @@ class ShaderPipeline{
     //implement later, for freeing shaders
 
     bool deleteProgram();
+    void sendMatrix(std::string name, glm::mat4 matrix);
 };
 
 #endif

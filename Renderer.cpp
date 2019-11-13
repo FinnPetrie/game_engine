@@ -28,13 +28,15 @@ void Renderer::run(){
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(err));
         return;
     }
-
+    glEnable(GL_DEPTH_TEST);
     camera = new Camera();
     
-    glUseProgram(shaders->getProgram());
 
-    GLint loc = glGetUniformLocation(shaders->getProgram(), "modelview");
-    std::cout << "Location: " << loc << std::endl;
+    // glfwSetCursorPosCallback(w->getWindow(), Camera::mouse_callback);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)w->getHeight()/(float)w->getWidth(), 0.1f, 100.0f);  
+    glm::mat4 view;
     GLuint verArrId;
     glGenVertexArrays(1, &verArrId);
     glBindVertexArray(verArrId);
@@ -49,11 +51,22 @@ void Renderer::run(){
     glGenBuffers(1, &verBuff);
     glBindBuffer(GL_ARRAY_BUFFER, verBuff);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
-
+    
 
     std::cout << "Running" << std::endl;
     while(!glfwWindowShouldClose(w->getWindow())){
-        camera->input(w->getWindow());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glfwPollEvents();
+        camera->handleKeyboard(w->getWindow());
+        camera->handleMouse(w->getWindow());
+
+        glUseProgram(shaders->getProgram());
+        
+        view = camera->getView();
+
+        shaders->sendMatrix("model", model);
+        shaders->sendMatrix("view", view);
+        shaders->sendMatrix("projection", projection);
 
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, verBuff);
@@ -62,6 +75,7 @@ void Renderer::run(){
         glDisableVertexAttribArray(0);
         
         glfwSwapBuffers(w->getWindow());
+        glFlush();
     }
     
 }
