@@ -1,3 +1,4 @@
+#include <iostream>
 #include "utils.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -20,8 +21,9 @@ private:
 public:
 
     Camera();
-    void input(GLFWwindow* window);
-    void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-
+    Camera(glm::vec3 position, glm::vec3 front, float pitch, float yaw);
+    void handleKeyboard(GLFWwindow* window);
+    void handleMouse(GLFWwindow* window);
+    glm::mat4 getView();
 };
 
