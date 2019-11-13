@@ -4,6 +4,7 @@
 class Window{
     private:
 
+    int width, height;
     GLFWwindow* window;
 
     public:
@@ -11,6 +12,8 @@ class Window{
     Window();
     Window(int width, int height);
     GLFWwindow* getWindow();
+    int getHeight();
+    int getWidth();
     void destroy();
 
 };
