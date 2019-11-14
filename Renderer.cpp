@@ -30,9 +30,9 @@ void Renderer::run(){
     }
     glEnable(GL_DEPTH_TEST);
     camera = new Camera(w);
-    Mesh m;
+    // Mesh m;
 
-
+    scene = new Scene();
     while(!glfwWindowShouldClose(w->getWindow())){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();
@@ -44,7 +44,7 @@ void Renderer::run(){
         
         shaders->modelViewProjection(camera);
 
-        m.draw();
+        scene->draw();
 
         glfwSwapBuffers(w->getWindow());
         glFlush();

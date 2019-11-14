@@ -13,7 +13,7 @@ Mesh::Mesh(){
     // };
     GLfloat rand;
     for(int i =0; i < 9; i++){
-        rand = std::rand()%5;
+        rand = std::rand()%100;
         std::cout << "Random vertex: " << rand << std::endl;
         vertices.push_back(rand);
     }
