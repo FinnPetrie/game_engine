@@ -51,6 +51,11 @@ GLint ShaderPipeline::getProgram(){
     return programID;
 }
 
+void ShaderPipeline::modelViewProjection(Camera *c){
+        sendMatrix("model", c->getModel());
+        sendMatrix("view", c->getView());
+        sendMatrix("projection", c->getProjection());
+}
 void ShaderPipeline::sendMatrix(std::string name, glm::mat4 matrix){
     GLint location = glGetUniformLocation(programID, name.c_str());
     // std::cout << "Matrix " << name << " location : " << location << std::endl;

@@ -2,6 +2,7 @@
 #define RENDERER_H_
 #include "ShaderPipeline.h"
 #include "Window.h"
+#include "Mesh.h"
 #include "Camera.h"
 
 

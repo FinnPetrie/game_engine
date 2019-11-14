@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(){
+Camera::Camera(Window* window){
     cameraPos = new glm::vec3(0.0f, 0.0f, 3.0f);
     cameraTarget = new glm::vec3(0.0f, 0.0f, 0.0f);
     cameraDirection = new glm::vec3(glm::normalize(*cameraPos - *cameraTarget));
@@ -21,6 +21,11 @@ Camera::Camera(){
     // cameraDirection->y = sin(glm::radians(pitch));
     // cameraDirection->x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
     // cameraDirection->z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+
+    model = new glm::mat4(1.0f);
+    // glm::mat4 model = glm::mat4(1.0f);
+    projection = new glm::mat4(glm::perspective(glm::radians(45.0f), (float)window->getHeight()/(float)window->getWidth(), 0.1f, 100.0f));  
+  
 }
 
 void Camera::handleKeyboard(GLFWwindow *window){
@@ -73,4 +78,12 @@ void Camera::handleMouse(GLFWwindow* window){
 
 glm::mat4 Camera::getView(){
     return glm::lookAt(*cameraPos, *cameraPos + *cameraFront, *up);
+}
+
+glm::mat4 Camera::getModel(){
+    return *model;
+}
+
+glm::mat4 Camera::getProjection(){
+    return *projection;
 }
