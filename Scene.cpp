@@ -6,9 +6,13 @@ Scene::Scene(){
         m = new Mesh();
         scene.push_back(*m);
     }
-    
+    Light l;
+    lights.push_back(l);
 }
 
+std::vector<Light> Scene::getLights(){
+    return lights;
+}
 
 void Scene::draw(){
 

@@ -31,8 +31,14 @@ void Renderer::run(){
     glEnable(GL_DEPTH_TEST);
     camera = new Camera(w);
     // Mesh m;
+    glm::vec4 light(0.0f, 1.0f, 2.0f, 1.0f);
+    glm::vec3 colour(1.0f, 1.0f, 1.0f);
+    // shaders->sendVec4("lightPos", light);
 
+    // shaders->sendVec3("lightColour", colour);
     scene = new Scene();
+    
+
     while(!glfwWindowShouldClose(w->getWindow())){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();
@@ -43,7 +49,7 @@ void Renderer::run(){
         glUseProgram(shaders->getProgram());
         
         shaders->modelViewProjection(camera);
-
+        shaders->sendLights("LightUBlock", scene->getLights());
         scene->draw();
 
         glfwSwapBuffers(w->getWindow());
