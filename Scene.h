@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Light.h"
 #include <vector>
+#include "Sphere.h"
 
 
 class Scene{

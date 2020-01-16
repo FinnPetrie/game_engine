@@ -6,6 +6,7 @@ Scene::Scene(){
         m = new Mesh();
         scene.push_back(*m);
     }
+    
     Light l;
     lights.push_back(l);
 }
@@ -20,4 +21,5 @@ void Scene::draw(){
         m.draw();
     }
 
+   
 }

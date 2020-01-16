@@ -14,7 +14,7 @@ Camera::Camera(Window* window){
                                     glm::vec3(0.0f, 1.0f, 0.0f)));
                                     
     cameraFront = new glm::vec3(0.0f, 0.0f, 1.0f);
-    speed = 0.5f;
+    speed = 0.01f;
     yaw = -90.0f;
     pitch = 0.0f;
     // pitch = 0;
@@ -29,7 +29,6 @@ Camera::Camera(Window* window){
 }
 
 void Camera::handleKeyboard(GLFWwindow *window){
-    std::cout << "Handling keyboard" << std::endl;
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         *cameraPos += speed**cameraFront;
     }
@@ -42,7 +41,7 @@ void Camera::handleKeyboard(GLFWwindow *window){
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
         *cameraPos += glm::normalize(glm::cross(*cameraFront, *up)) * speed;
     }
-    std::cout << glm::to_string(*cameraPos) << std::endl;
+    // std::cout << glm::to_string(*cameraPos) << std::endl;
 }
 
 void Camera::handleMouse(GLFWwindow* window){
@@ -52,9 +51,8 @@ void Camera::handleMouse(GLFWwindow* window){
     float yoffset = lastY - ypos;
     lastX = xpos;
     lastY = ypos;
-    std::cout << "Yaw: " << yaw << std::endl;
-    std::cout << "Pitch : " << pitch << std::endl;
-    float sensitivity = 0.05f;
+    
+    float sensitivity = 0.01f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
@@ -86,4 +84,8 @@ glm::mat4 Camera::getModel(){
 
 glm::mat4 Camera::getProjection(){
     return *projection;
+}
+
+glm::vec4 Camera::getEye(){
+    return glm::vec4(*cameraFront, 1.0f);
 }

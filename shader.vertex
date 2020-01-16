@@ -9,6 +9,7 @@ uniform mat4 projection;
 out vec3 vPos;
 out vec3 vNormal;
 out vec3 fragPos;
+
 void main(){
     //mat4 mv = modelview;
     vec4 worldPosition = model*vec4(aPos, 1.0);

@@ -59,11 +59,14 @@ void ShaderPipeline::modelViewProjection(Camera *c){
 
 void ShaderPipeline::sendVec4(std::string name, glm::vec4 vector){
     GLint location = glGetUniformLocation(programID, name.c_str());
+    std::cout << "Vector: " << name << " location : " << location << std::endl;
+
     glUniform4fv(location, GL_FALSE, glm::value_ptr(vector));
 }
 
 void ShaderPipeline::sendVec3(std::string name, glm::vec3 vector){
     GLint location = glGetUniformLocation(programID, name.c_str());
+    std::cout << "Vector: " << name << " location : " << location << std::endl;
     glUniform4fv(location, GL_FALSE, glm::value_ptr(vector));
 }
 
@@ -80,11 +83,14 @@ void ShaderPipeline::sendLights(std::string name, std::vector<Light> lights){
         
         GLuint positionLocation = glGetUniformLocation(programID, nPos.c_str());
         GLuint colourLocation = glGetUniformLocation(programID, nColour.c_str());
+        std::cerr << "positionLocation: " << positionLocation << std::endl;
+        std::cerr << "colourLocation: " << colourLocation << std::endl;
 
         glUniform4fv(positionLocation, 0, glm::value_ptr(l.getPosition()));
         glUniform4fv(colourLocation, 0, glm::value_ptr(l.getColour()));
 
         i+=1;
+        std::cout << "i " << i << std::endl;
     }
 
 }

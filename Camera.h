@@ -36,6 +36,8 @@ public:
     glm::mat4 getView();
     glm::mat4 getModel();
     glm::mat4 getProjection();
+    
+    glm::vec4 getEye();
 };
 
 #endif

@@ -8,4 +8,5 @@
 #include "glm/gtx/string_cast.hpp"
 #include <glm/glm.hpp>
 #include <iostream>
+#include <math.h>
 #endif
