@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(){
+Camera::Camera(Window* window){
     cameraPos = new glm::vec3(0.0f, 0.0f, 3.0f);
     cameraTarget = new glm::vec3(0.0f, 0.0f, 0.0f);
     cameraDirection = new glm::vec3(glm::normalize(*cameraPos - *cameraTarget));
@@ -14,17 +14,21 @@ Camera::Camera(){
                                     glm::vec3(0.0f, 1.0f, 0.0f)));
                                     
     cameraFront = new glm::vec3(0.0f, 0.0f, 1.0f);
-    speed = 0.5f;
+    speed = 0.01f;
     yaw = -90.0f;
     pitch = 0.0f;
     // pitch = 0;
     // cameraDirection->y = sin(glm::radians(pitch));
     // cameraDirection->x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
     // cameraDirection->z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+
+    model = new glm::mat4(1.0f);
+    // glm::mat4 model = glm::mat4(1.0f);
+    projection = new glm::mat4(glm::perspective(glm::radians(45.0f), (float)window->getHeight()/(float)window->getWidth(), 0.1f, 100.0f));  
+  
 }
 
 void Camera::handleKeyboard(GLFWwindow *window){
-    std::cout << "Handling keyboard" << std::endl;
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
         *cameraPos += speed**cameraFront;
     }
@@ -37,7 +41,7 @@ void Camera::handleKeyboard(GLFWwindow *window){
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
         *cameraPos += glm::normalize(glm::cross(*cameraFront, *up)) * speed;
     }
-    std::cout << glm::to_string(*cameraPos) << std::endl;
+    // std::cout << glm::to_string(*cameraPos) << std::endl;
 }
 
 void Camera::handleMouse(GLFWwindow* window){
@@ -47,9 +51,8 @@ void Camera::handleMouse(GLFWwindow* window){
     float yoffset = lastY - ypos;
     lastX = xpos;
     lastY = ypos;
-    std::cout << "Yaw: " << yaw << std::endl;
-    std::cout << "Pitch : " << pitch << std::endl;
-    float sensitivity = 0.05f;
+    
+    float sensitivity = 0.01f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
@@ -73,4 +76,16 @@ void Camera::handleMouse(GLFWwindow* window){
 
 glm::mat4 Camera::getView(){
     return glm::lookAt(*cameraPos, *cameraPos + *cameraFront, *up);
+}
+
+glm::mat4 Camera::getModel(){
+    return *model;
+}
+
+glm::mat4 Camera::getProjection(){
+    return *projection;
+}
+
+glm::vec4 Camera::getEye(){
+    return glm::vec4(*cameraFront, 1.0f);
 }
