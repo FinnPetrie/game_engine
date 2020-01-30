@@ -18,7 +18,7 @@ std::vector<Light> Scene::getLights(){
 void Scene::draw(){
 
     for(Mesh m : scene){
-        m.draw();
+        m.draw(36);
     }
 
    

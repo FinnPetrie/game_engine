@@ -24,6 +24,8 @@ void Renderer::createShaders(){
 void Renderer::run(){
     // std::cout << err << std::endl;
     std::cout << GLEW_OK << std::endl;
+    glEnable(GL_COLOR_MATERIAL);
+
     if(GLEW_OK != err){
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(err));
         return;
@@ -31,20 +33,22 @@ void Renderer::run(){
     glEnable(GL_DEPTH_TEST);
     camera = new Camera(w);
     scene = new Scene();
-    shaders->sendVec3("lightPos", glm::vec3(0.0f, 0.0f, -2.0f));
-    shaders->sendVec3("lightColour", glm::vec3(1.0f, 1.0f, 1.0f));
-    //attribute location of the normal isn't being assigned
-    std::cout << "Normal location: " <<  glGetAttribLocation(shaders->getProgram(), "normal") << std::endl;
+
     while(!glfwWindowShouldClose(w->getWindow())){
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();
 
         camera->handleKeyboard(w->getWindow());
         camera->handleMouse(w->getWindow());
 
-        glUseProgram(shaders->getProgram());
-        
+        shaders->use();        
         shaders->modelViewProjection(camera);
+        shaders->sendVec3("lightPos", glm::vec3(0.0f, 0.0f, -2.0f));
+        shaders->sendVec3("lightColour", glm::vec3(1.0f, 1.0f, 1.0f));
+        shaders->sendVec3("test", glm::vec3(1.0f, 1.0f, 0.0f));
+        //attribute location of the normal isn't being assigned
+        std::cout << "Normal location: " <<  glGetAttribLocation(shaders->getProgram(), "normal") << std::endl;
         // shaders->sendVec4("uEyePosition", camera->getEye());
         scene->draw();
 

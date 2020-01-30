@@ -26,6 +26,9 @@ class ShaderPipeline{
     void sendFloat(std::string name, float l);
     void sendVec3(std::string name, glm::vec3 vector);
     void sendVec4(std::string name, glm::vec4 vector);
+    
+
+    void use();
 };
 
 #endif

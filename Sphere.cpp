@@ -34,7 +34,7 @@ Sphere::Sphere(int longitudeCount, int latitudeCount) : Mesh(){
 }
 
 void Sphere::draw(){
-    Mesh::draw();
+    Mesh::draw(36);
 }
 
 void Sphere::print(){

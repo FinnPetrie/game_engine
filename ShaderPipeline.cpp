@@ -14,6 +14,10 @@ ShaderPipeline::ShaderPipeline(std::vector<std::string> paths, std::vector<GLenu
 }
 
 
+void ShaderPipeline::use(){
+    glUseProgram(programID);
+}
+
 bool ShaderPipeline::link(){
     this->programID = glCreateProgram();
     for(Shader shader : shaders){
@@ -61,13 +65,15 @@ void ShaderPipeline::sendVec4(std::string name, glm::vec4 vector){
     GLint location = glGetUniformLocation(programID, name.c_str());
     std::cout << "Vector: " << name << " location : " << location << std::endl;
 
-    glUniform4fv(location, GL_FALSE, glm::value_ptr(vector));
+    glUniform4fv(location, 1, glm::value_ptr(vector));
 }
 
 void ShaderPipeline::sendVec3(std::string name, glm::vec3 vector){
     GLint location = glGetUniformLocation(programID, name.c_str());
     std::cout << "Vector: " << name << " location : " << location << std::endl;
-    glUniform4fv(location, GL_FALSE, glm::value_ptr(vector));
+
+    std::cout << glm::to_string(vector) << std::endl;
+    glUniform3fv(location, 1, glm::value_ptr(vector));
 }
 
 void ShaderPipeline::sendFloat(std::string name, float f){

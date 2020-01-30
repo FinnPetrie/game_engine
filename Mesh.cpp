@@ -5,11 +5,14 @@ Mesh::Mesh(){
 
 
     
-    addVertex(-1.0f, -1.0f, 0.0f);
-    addVertex(1.0f, -1.0f, 0.0f);
-    addVertex(0.0f, 1.0f, 0.0f);
-    calculateNormal();
-    attachMesh();
+    // addVertex(-1.0f, -1.0f, 0.0f);
+    // addVertex(1.0f, -1.0f, 0.0f);
+    // addVertex(0.0f, 1.0f, 0.0f);
+    // calculateNormal();
+    // attachMesh();
+    test();
+  
+
 }
 
 
@@ -46,10 +49,71 @@ void Mesh::random(){
 }
 
 
+void Mesh::test(){
+      float verts[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+};
+
+    glGenVertexArrays(1, &meshVAO);
+    glGenBuffers(1, &vertexBuffer);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+    glBindVertexArray(meshVAO);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+
+}
 void Mesh::attachMesh(){
-        glGenVertexArrays(1, &verArrId);
-        glBindVertexArray(verArrId);
+        glGenVertexArrays(1, &meshVAO);
+        glBindVertexArray(meshVAO);
 
         glGenBuffers(1, &vertexBuffer);    
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -71,35 +135,24 @@ void Mesh::calculateNormal(){
     glm::vec3 normal = glm::normalize(glm::cross(U, V));
 
     normals.push_back(normal);
-    // glm::vec3 normalG;
-    // normal.x = (U.y*V.z) - (U.z*V.y);
-    // normal.y = (U.z*V.x) - (U.x*V.z);
-    // normal.z = (U.x*V.y) - (U.y*V.x);
-    std::cout << "Normal: " << glm::to_string(normal) << std::endl;
-  
-    std::cout << "Normal test, point one: " << glm::dot(p2, normal) << std::endl;
-    std::cout << "Normal test, point two: " << glm::dot(p1, normal) << std::endl;
-    std::cout << "Normal test, point three: " << glm::dot(p3, normal) << std::endl;
-
-    std::cout << "Norm test, U: " << glm::dot(normal, U) << std::endl;
-    std::cout << "Norm test, V: " << glm::dot(normal, V) << std::endl;
 }
 
 
 
 
-void Mesh::draw(){
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDisableVertexAttribArray(0);
+void Mesh::draw(int numVertices){
+        glBindVertexArray(meshVAO);
 
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        print(false, true);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        glDisableVertexAttribArray(1);
+        // glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        glDrawArrays(GL_TRIANGLES, 0, numVertices);
+        // glDisableVertexAttribArray(0);
+
+//         glEnableVertexAttribArray(1);
+//         glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+//         // print(false, true);
+//         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+//         glDisableVertexAttribArray(1);
 }
 
 void Mesh::addVertex(GLfloat x, GLfloat y, GLfloat z){
