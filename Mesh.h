@@ -10,12 +10,15 @@ protected:
     std::vector<GLfloat> vertices;
    
     std::vector<glm::vec3> normals;
+    std::vector<int> indices;
+
     glm::vec3 colour;
     GLuint meshVAO;
     GLuint vertexBuffer;
     GLuint normalBuffer;
-    GLuint normalArr;
-
+    GLuint normalVAO;
+    GLuint indexBuffer;
+    int numVertices;
 
     
     void calculateNormal();
@@ -23,7 +26,7 @@ protected:
 public:
     
     Mesh();
-    void draw(int numVertices);
+    void draw();
     void attachMesh();
     void bindMesh();
     void random();

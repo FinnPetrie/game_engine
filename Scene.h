@@ -4,6 +4,7 @@
 #include "Light.h"
 #include <vector>
 #include "Sphere.h"
+#include "Cube.h"
 #include "ShaderPipeline.h"
 
 
@@ -11,6 +12,7 @@ class Scene{
 
     private:
     std::vector<Mesh> scene;
+    std::vector<Cube> cubes;
     std::vector<Light> lights;
     public:
 

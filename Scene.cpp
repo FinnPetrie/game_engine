@@ -1,9 +1,15 @@
 #include "Scene.h"
 
 Scene::Scene(){
-    Mesh *m;
-    m = new Mesh();
-    scene.push_back(*m);
+    // Mesh *m;
+    // m = new Mesh();
+    // scene.push_back(*m);
+    Cube *c;
+    c = new Cube();
+    scene.push_back(*c);
+    Sphere *s = new Sphere(20, 20);
+    scene.push_back(*s);
+
     Light *l;
     for(int i = 0; i < 10; i++){
        
@@ -26,8 +32,7 @@ void Scene::sendLights(ShaderPipeline *shaders){
 void Scene::draw(){
 
     for(Mesh m : scene){
-        m.draw(36);
+        m.draw();
     }
-
    
 }
