@@ -5,18 +5,17 @@ layout (location = 1) in vec3 normal;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform vec3 test;
+uniform vec4 eye;
+
 out vec3 vPos;
 out vec3 vNormal;
-out vec3 fragPos;
+out vec3 eyeDir;
 
 void main(){
     //mat4 mv = modelview;
     vec4 worldPosition = model*vec4(aPos, 1.0);
     vPos = worldPosition.xyz;
-    fragPos = vec3(model*vec4(aPos, 1.0));
-    vNormal = (model*vec4(normal, 1.0)).xyz + test;
-
+    vNormal = mat3(transpose(inverse(model)))*normal;
     gl_Position = projection * view * worldPosition;
-    vec3 newK = test;
+    eyeDir = normalize(eye.xyz -vPos);
 }

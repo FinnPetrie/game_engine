@@ -33,7 +33,7 @@ void Renderer::run(){
     glEnable(GL_DEPTH_TEST);
     camera = new Camera(w);
     scene = new Scene();
-
+    
     while(!glfwWindowShouldClose(w->getWindow())){
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -44,13 +44,15 @@ void Renderer::run(){
 
         shaders->use();        
         shaders->modelViewProjection(camera);
-        shaders->sendVec3("lightPos", glm::vec3(0.0f, 0.0f, -2.0f));
-        shaders->sendVec3("lightColour", glm::vec3(1.0f, 1.0f, 1.0f));
-        shaders->sendVec3("test", glm::vec3(1.0f, 1.0f, 0.0f));
+        // shaders->sendVec3("lightPos", glm::vec3(0.0f, 0.0f, -2.0f));
+        // shaders->sendVec3("lightColour", glm::vec3(1.0f, 1.0f, 1.0f));
+        shaders->sendVec4("eye",camera->getEye());
         //attribute location of the normal isn't being assigned
-        std::cout << "Normal location: " <<  glGetAttribLocation(shaders->getProgram(), "normal") << std::endl;
+        // std::cout << "Normal location: " <<  glGetAttribLocation(shaders->getProgram(), "normal") << std::endl;
         // shaders->sendVec4("uEyePosition", camera->getEye());
+        scene->sendLights(shaders);
         scene->draw();
+        
 
         glfwSwapBuffers(w->getWindow());
         glFlush();

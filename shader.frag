@@ -4,26 +4,49 @@
 
 in vec3 vPos;
 in vec3 vNormal;
-in vec3 fragPos;
+in vec3 eyeDir;
 out vec4 fragColour;
 
-uniform vec3 lightPos;
-uniform vec3 lightColour;
+
+struct Light{
+    vec3 pos;
+    vec4 colour;
+};
+
+uniform Light lights[10];
 uniform vec3 objectColour;
 
 
 
-void main(){
-    vec3 lightP = vec3(0.0, 0.0, -10.0);
-    vec3 lightCol = vec3(1.0, 1.0, 1.0);
-    vec3 n = normalize(vNormal);
-    vec3 v = normalize(lightPos - fragPos);
-    float ambientStrength = 0.5;
-    vec3 ambient = ambientStrength * lightColour;
 
-    float diff = max(dot(n, v), 0.0);
-    vec3 diffuse = diff*lightCol;
+vec3 lighting(vec3 n, float ambientStrength, float specularStrength, float alpha){
+    
+    float diff = 0;
+    vec3 ambient = vec3(0,0,0);
+    vec3 diffuse = vec3(0,0,0);
+    vec3 specular = vec3(0,0,0);
+    float spec = 0;
+
+    for(int i =0 ; i < 10; i++){
+        vec3 lightDir = normalize(lights[i].pos - vPos);
+        vec3 reflection = normalize(2*(dot(n, -lightDir)*n - lightDir));
+
+        ambient += ambientStrength*lights[i].colour.xyz;
+        diff += max(dot(n, lightDir), 0.0);
+        diffuse += diff*lights[i].colour.xyz;
+        spec += pow(max(dot(reflection, normalize(eyeDir)), 0.0), alpha);
+        specular += specularStrength*spec*lights[i].colour.xyz;
+    }
+    return diffuse + ambient + specular;
+}
+
+
+void main(){
+    vec3 normal = normalize(vNormal);
+    vec3 lightLevel = lighting(normal, 0.5, 1.5, 32);
+
     vec3 objectColour = vec3(0.5, 0.2, 0.78);
-    vec3 result = (ambient + diffuse) * objectColour;
+
+    vec3 result = lightLevel*objectColour;
     fragColour = vec4(result, 1.0);
 }

@@ -6,15 +6,17 @@
 
 class Light{
     private:
-        glm::vec4 *pos;
+        glm::vec3 *pos;
         glm::vec4 *colour;
 
     public:
 
     Light();
-    Light(glm::vec4 pos, glm::vec4 colour);
+    Light(glm::vec3 pos, glm::vec4 colour);
 
-    glm::vec4 getPosition();
+    glm::vec3 getPosition();
     glm::vec4 getColour();
+
+    void print();
 };
 #endif
