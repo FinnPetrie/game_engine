@@ -68,6 +68,13 @@ void ShaderPipeline::sendVec4(std::string name, glm::vec4 vector){
     glUniform4fv(location, 1, glm::value_ptr(vector));
 }
 
+void ShaderPipeline::sendVec2(std::string name, glm::vec2 vector){
+    GLint location = glGetUniformLocation(programID, name.c_str());
+    // std::cout << "Vector: " << name << " location : " << location << std::endl;
+
+    glUniform2fv(location, 1, glm::value_ptr(vector));
+}
+
 void ShaderPipeline::sendVec3(std::string name, glm::vec3 vector){
     GLint location = glGetUniformLocation(programID, name.c_str());
     // std::cout << "Vector: " << name << " location : " << location << std::endl;
@@ -86,9 +93,9 @@ void ShaderPipeline::sendLights(std::string name, std::vector<Light> lights){
     for(Light l : lights){
         std::string nPos= name +"[" + std::to_string(i) + "].pos";
         std::string nColour = name +"[" + std::to_string(i) + "].colour";
-        l.print();
-        std::cout << nPos << std::endl;
-        std::cout << nColour << std::endl;
+        // l.print();
+        // std::cout << nPos << std::endl;
+        // std::cout << nColour << std::endl;
         GLuint positionLocation = glGetUniformLocation(programID, nPos.c_str());
         GLuint colourLocation = glGetUniformLocation(programID, nColour.c_str());
         // std::cerr << "positionLocation: " << positionLocation << std::endl;

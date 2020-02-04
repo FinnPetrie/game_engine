@@ -1,5 +1,7 @@
 #include "Renderer.h"
 #include <iostream>
+
+
 Renderer::Renderer(){
     this->w = new Window(1080, 1040);
     err = glewInit();
@@ -7,14 +9,23 @@ Renderer::Renderer(){
     createShaders();
 }
 
+Renderer::Renderer(int width, int height, bool rayMarch) :  RAY_MARCH(rayMarch){
+    this->w = new Window(width, height);
+    err = glewInit();
+    createShaders();
+}
+
 
 void Renderer::createShaders(){
     std::vector<std::string> paths;
     std::vector<GLenum> types;
-
-    paths.push_back("shader.vertex");
-    paths.push_back("shader.frag");
-    
+    if(!RAY_MARCH){
+    paths.push_back("Shaders/shader.vertex");
+    paths.push_back("Shaders/shader.frag");
+    }else{
+        paths.push_back("Shaders/raymarch.vertex");
+        paths.push_back("Shaders/raymarch.frag");
+    }
     types.push_back(GL_VERTEX_SHADER);
     types.push_back(GL_FRAGMENT_SHADER);
 
@@ -32,27 +43,38 @@ void Renderer::run(){
     }
     glEnable(GL_DEPTH_TEST);
     camera = new Camera(w);
+
+    if(!RAY_MARCH){
     scene = new Scene();
-    
+    }else{
+        std::cout << "Ray-Marching enabled" << std::endl;
+    }
+
     while(!glfwWindowShouldClose(w->getWindow())){
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();
+        
+        
+        //-------------------
+        shaders->use();    
+        shaders->sendVec2("screenSize", glm::vec2(w->getHeight(), w->getWidth()));
 
+        if(RAY_MARCH){
+            shaders->sendVec4("eye", glm::vec4(0, 0, 5.0, 0));
+        }
+        
+        //-------------------
+        if(!RAY_MARCH){
         camera->handleKeyboard(w->getWindow());
         camera->handleMouse(w->getWindow());
 
-        shaders->use();        
+        shaders->sendVec4("eye", camera->getEye());
+
         shaders->modelViewProjection(camera);
-        // shaders->sendVec3("lightPos", glm::vec3(0.0f, 0.0f, -2.0f));
-        // shaders->sendVec3("lightColour", glm::vec3(1.0f, 1.0f, 1.0f));
-        shaders->sendVec4("eye",camera->getEye());
-        //attribute location of the normal isn't being assigned
-        // std::cout << "Normal location: " <<  glGetAttribLocation(shaders->getProgram(), "normal") << std::endl;
-        // shaders->sendVec4("uEyePosition", camera->getEye());
         scene->sendLights(shaders);
         scene->draw();
-        
+        }
 
         glfwSwapBuffers(w->getWindow());
         glFlush();

@@ -7,11 +7,11 @@ Scene::Scene(){
     Cube *c;
     c = new Cube();
     scene.push_back(*c);
-    Sphere *s = new Sphere(20, 20);
-    scene.push_back(*s);
+    // Sphere *s = new Sphere(20, 20, 1.0);
+    // scene.push_back(*s);
 
     Light *l;
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 2; i++){
        
         l = new Light();
         // l->print();

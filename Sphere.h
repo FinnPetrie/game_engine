@@ -6,12 +6,11 @@
 class Sphere : public Mesh{
 
     private:
-        std::vector<int> indices;
         double radius;
         void genIndices(int longitude, int latitude);
     public:
 
-        Sphere(int longitude, int latitude);
+        Sphere(int longitude, int latitude, double radius);
     
         void draw();
         void print();

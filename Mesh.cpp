@@ -33,8 +33,6 @@ void Mesh::random(){
 
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
     glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
-
-
 }
 
 
@@ -77,7 +75,6 @@ void Mesh::draw(){
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glDrawElements(GL_QUAD_STRIP, indices.size(), GL_UNSIGNED_INT, NULL);
         }else{
-        
         
         glDrawArrays(GL_TRIANGLES, 0, numVertices);
         // glDisableVertexAttribArray(0);

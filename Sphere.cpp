@@ -2,39 +2,49 @@
 
 
 
-Sphere::Sphere(int longitudeCount, int latitudeCount) : Mesh(){
+Sphere::Sphere(int longitudeCount, int latitudeCount, double radius) : Mesh(){
  
 
     float longitude = 2*M_PI/longitudeCount;
     float latitude = M_PI/latitudeCount;
     float longAngle, latAngle;
-    //define a sphere as a function of two angles
+    double r = 1.0f/radius;
+    double x, y, xy, z;
+    double nx, ny, nz;
 
+    //define a sphere as a function of two angles
+    std::cout << longitudeCount << std::endl;
+    std::cout << latitudeCount << std::endl;
     std::cout << "Longitude: " << longitude << std::endl;
     std::cout << "Latitude: " << latitude << std::endl;
     //polar iteration
-    for(float i = 0; i < longitude; i+= 0.1){
-        std::cout << "i: " << i << std::endl;
+    for(int i = 0; i <longitudeCount; i++){
+        // std::cout << "i: " << i << std::endl;
         //equatorial iteration
         longAngle = M_PI/2 - i*longitude;
-        for(float j = 0; j < latitude; j += 0.1){
+        xy = radius*cos(longAngle);
+        z = radius*sin(longAngle);
+        for(int j = 0; j < latitudeCount; j ++){
             std::cout << "j: " << j << std::endl;
             latAngle = j*latitude;
             //sample our spherical parameterisation
-            double x = cos(longAngle)*cos(latAngle);
-            double y = cos(longAngle)*sin(latAngle);
-            double z = sin(longAngle);
+            x = xy*cos(latAngle);
+            y = xy*sin(latAngle);
+            z = sin(latAngle);
             // std::cout << x << y << z << std::endl;
             Mesh::addVertex(x, y, z);
-            glm::vec3 normal(x, y,z);
+            nx = x*r;
+            ny = y*r;
+            nz = z*r;
+            glm::vec3 normal(nx, ny,nz);
             Mesh::normals.push_back(normal);
         }
     }
     //for now
     Mesh::numVertices = Mesh::vertices.size();
-
-    attachMesh();
     print();
+    attachMesh();
+    // print();
 
 }
 
@@ -62,12 +72,13 @@ void Sphere::genIndices(int longitudeCount, int latitudeCount){
             }
         }
     }
-
 }
+
+
 void Sphere::attachMesh(){
         glGenVertexArrays(1, &meshVAO);
         glBindVertexArray(meshVAO);
-
+        std::cerr << meshVAO << std::endl;
         glGenBuffers(1, &vertexBuffer);    
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);

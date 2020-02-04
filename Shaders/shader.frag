@@ -1,12 +1,13 @@
 #version 330 core
 
 
-
 in vec3 vPos;
 in vec3 vNormal;
 in vec3 eyeDir;
+in vec3 eyeThree;
 out vec4 fragColour;
 
+uniform vec2 screenSize;
 
 struct Light{
     vec3 pos;
@@ -15,7 +16,6 @@ struct Light{
 
 uniform Light lights[10];
 uniform vec3 objectColour;
-
 
 
 

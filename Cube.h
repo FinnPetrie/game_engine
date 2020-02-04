@@ -8,4 +8,5 @@ class Cube: public Mesh{
 
     private:
 
+        void attachMesh(float *v);
 };
