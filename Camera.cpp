@@ -87,5 +87,6 @@ glm::mat4 Camera::getProjection(){
 }
 
 glm::vec4 Camera::getEye(){
+    
     return glm::vec4(*cameraPos, 1.0f);
 }

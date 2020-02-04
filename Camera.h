@@ -29,6 +29,9 @@ public:
 
     Camera(Window* window);
     Camera(glm::vec3 position, glm::vec3 front, float pitch, float yaw);
+
+    //note, when raymarching a strange effect happens - directions of the camera seem to change while moving
+    //maybe due to processing directions on the shader.
     void handleKeyboard(GLFWwindow* window);
     void handleMouse(GLFWwindow* window);
     

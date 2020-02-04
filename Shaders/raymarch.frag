@@ -15,9 +15,11 @@ out vec4 fragColour;
 
 uniform vec2 screenSize;
 
+//camera not functioning properly - space directions seem to change
 uniform vec3 cameraCentre;
 uniform vec3 cameraUp;
 uniform mat4 view;
+uniform vec4 eye;
 
 struct Light{
     vec3 pos;
@@ -41,8 +43,8 @@ float differenceSDF(float distA, float distB){
     return max(distA, -distB);
 }
 
-float sphereSDF(vec3 p){
-    return length(p) - 1.0;
+float sphereSDF(vec3 p, float c, float radius){
+    return length(mod(p, 1.0) - c ) - radius;
 }
 
 float cubeSDF(vec3 p){
@@ -56,13 +58,14 @@ float cubeSDF(vec3 p){
 }
 
 float sceneSDF(vec3 p){
-    float sphereDist = sphereSDF(p/1.2)*1.2;
-    float cubeDist = cubeSDF(p);
-    return differenceSDF(cubeDist, sphereDist);
+    float sphereDist = sphereSDF(p, 0.0, 0.1);
+    //float cubeDist = cubeSDF(p);
+    //return differenceSDF(cubeDist, sphereDist);
+    return sphereDist;
 }
 
-mat4 viewMatrix(vec3 eye, vec3 centre, vec3 up){
-    vec3 f = normalize(centre - eye);
+mat4 viewMatrix(vec3 eyeT, vec3 centre, vec3 up){
+    vec3 f = normalize(centre - eyeT);
     vec3 s = normalize(cross(f, up));
     vec3 u = cross(s, f);
 
@@ -75,9 +78,9 @@ mat4 viewMatrix(vec3 eye, vec3 centre, vec3 up){
 }
 
 vec3 estimateNormal(vec3 p){
-    return(normalize(vec3(sphereSDF(vec3(p.x + EPSILON, p.y, p.z )) - sphereSDF(vec3(p.x -EPSILON, p.y, p.z )),
-                          sphereSDF(vec3(p.x, p.y + EPSILON, p.z)) - sphereSDF(vec3(p.x, p.y - EPSILON, p.z)),
-                          sphereSDF(vec3(p.x, p.y, p.z + EPSILON)) - sphereSDF(vec3(p.x, p.y, p.z - EPSILON)))));
+    return(normalize(vec3(sceneSDF(vec3(p.x + EPSILON, p.y, p.z )) - sceneSDF(vec3(p.x -EPSILON, p.y, p.z )),
+                          sceneSDF(vec3(p.x, p.y + EPSILON, p.z)) - sceneSDF(vec3(p.x, p.y - EPSILON, p.z)),
+                          sceneSDF(vec3(p.x, p.y, p.z + EPSILON)) - sceneSDF(vec3(p.x, p.y, p.z - EPSILON)))));
     
 }   
 
@@ -107,7 +110,7 @@ vec3 lighting(vec3 p,  float ambientStrength, float specularStrength, float alph
 float rayMarch(vec3 marchingDirection, float start, float end){
     float depth = start;
     for(int i =0 ; i < MAX_MARCHING_STEPS; i++){
-        float dist = sceneSDF(eyeRes + depth * marchingDirection);
+        float dist = sceneSDF(eye.xyz + depth * marchingDirection);
         if(dist < EPSILON){
             return depth;
         }
@@ -140,8 +143,8 @@ void main(){
         return;
     }
 
-    vec3 p = eyeRes + dist * worldDir;
+    vec3 p = eye.xyz + dist * worldDir;
     
     vec3 colour = lighting(p, 0.5, 1.0, 4);
-    fragColour = vec4(colour, 1.0);
+    fragColour = vec4(clamp(colour, 0.0, 1.0), 1.0);
 }
