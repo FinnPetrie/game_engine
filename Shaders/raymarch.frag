@@ -15,6 +15,10 @@ out vec4 fragColour;
 
 uniform vec2 screenSize;
 
+uniform vec3 cameraCentre;
+uniform vec3 cameraUp;
+uniform mat4 view;
+
 struct Light{
     vec3 pos;
     vec4 colour;
@@ -126,8 +130,8 @@ vec3 rayDirection(float fieldOfView){
 void main(){
     vec3 dir = rayDirection(45.0);
 
-    mat4 viewToWorld = viewMatrix(eyeRes, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
-    vec3 worldDir = (viewToWorld * vec4(dir, 0.0)).xyz;
+    //mat4 viewToWorld = viewMatrix(eyeRes, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
+    vec3 worldDir = (view * vec4(dir, 0.0)).xyz;
 
     float dist = rayMarch(worldDir, MIN_DIST, MAX_DIST);
     
