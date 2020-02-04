@@ -33,14 +33,14 @@ void Renderer::createShaders(){
 
 }
 void Renderer::run(){
-    // std::cout << err << std::endl;
-    std::cout << GLEW_OK << std::endl;
+
     glEnable(GL_COLOR_MATERIAL);
 
     if(GLEW_OK != err){
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(err));
         return;
     }
+
     glEnable(GL_DEPTH_TEST);
 
     //generate usual scene if not ray-marching, otherwise setup Quad so each pixel is given a fragment
@@ -48,7 +48,6 @@ void Renderer::run(){
         camera = new Camera(w);
         scene = new Scene();
     }else{
-
         scene = new Scene(RAY_MARCH);
         std::cout << "Ray-Marching enabled" << std::endl;
     }
@@ -57,16 +56,14 @@ void Renderer::run(){
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();
-        
-        
+
         //-------------------
         shaders->use();    
         shaders->sendVec2("screenSize", glm::vec2(w->getHeight(), w->getWidth()));
-
+        //-------------------
         if(RAY_MARCH){
             shaders->sendVec4("eye", glm::vec4(0, 0, 5.0, 0));
         }
-        
         //-------------------
         if(!RAY_MARCH){
         camera->handleKeyboard(w->getWindow());
@@ -75,10 +72,13 @@ void Renderer::run(){
         shaders->sendVec4("eye", camera->getEye());
         shaders->modelViewProjection(camera);
         
-        scene->sendLights(shaders);
         }
-        
+        //-------------------
+
+        scene->sendLights(shaders);
         scene->draw();
+
+        //-------------------
 
         glfwSwapBuffers(w->getWindow());
         glFlush();

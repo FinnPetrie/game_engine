@@ -12,6 +12,7 @@ in vec3 eyeRes;
 
 out vec4 fragColour;
 
+
 uniform vec2 screenSize;
 
 struct Light{
@@ -20,12 +21,42 @@ struct Light{
 };
 
 uniform Light lights[10];
+uniform int numLights;
 uniform vec3 objectColour;
 
 float sphereSDF(vec3 p){
     return length(p) - 1.0;
 }
 
+
+vec3 estimateNormal(vec3 p){
+    return(normalize(vec3(sphereSDF(vec3(p.x + EPSILON, p.y, p.z )) - sphereSDF(vec3(p.x -EPSILON, p.y, p.z )),
+                          sphereSDF(vec3(p.x, p.y + EPSILON, p.z)) - sphereSDF(vec3(p.x, p.y - EPSILON, p.z)),
+                          sphereSDF(vec3(p.x, p.y, p.z + EPSILON)) - sphereSDF(vec3(p.x, p.y, p.z - EPSILON)))));
+    
+}   
+
+vec3 lighting(vec3 p, float ambientStrength, float specularStrength, float alpha){
+    vec3 n = estimateNormal(p);
+
+    float diff = 0;
+    vec3 ambient = ambientStrength*vec3(1,1,1);
+    vec3 diffuse = vec3(0,0,0);
+    vec3 specular = vec3(0,0,0);
+    float spec = 0;
+
+    for(int i =0 ; i < numLights; i++){
+        vec3 lightDir = normalize(lights[i].pos - p);
+        vec3 reflection = normalize(2*(dot(n, -lightDir)*n - lightDir));
+
+        ambient += ambientStrength*lights[i].colour.xyz;
+        diff += max(dot(n, lightDir), 0.0);
+        diffuse += diff*lights[i].colour.xyz;
+        spec += pow(max(dot(reflection, normalize(eyeDir)), 0.0), alpha);
+        specular += specularStrength*spec*lights[i].colour.xyz;
+    }
+    return diffuse + ambient + specular;
+}
 
 float rayMarch(vec3 marchingDirection, float start, float end){
     float depth = start;
@@ -58,7 +89,8 @@ void main(){
         fragColour= vec4(0.0, 0.0, 0.0, 0.0);
         return;
     }
-    else{
-        fragColour = vec4(1.0, 0.0, 0.0, 1.0);
-    }
+
+    vec3 p = eyeRes + dist * dir;
+    vec3 colour = lighting(p, 0.5, 1.0, 4);
+    fragColour = vec4(colour, 1.0);
 }

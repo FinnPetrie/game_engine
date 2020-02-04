@@ -27,7 +27,8 @@ class ShaderPipeline{
     void sendVec2(std::string name, glm::vec2 vector);
     void sendVec3(std::string name, glm::vec3 vector);
     void sendVec4(std::string name, glm::vec4 vector);
-    
+    void sendInt(std::string name, int t);
+
 
     void use();
 };

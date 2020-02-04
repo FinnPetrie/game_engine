@@ -114,3 +114,9 @@ void ShaderPipeline::sendMatrix(std::string name, glm::mat4 matrix){
     // std::cout << "Matrix " << name << " location : " << location << std::endl;
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
+
+void ShaderPipeline::sendInt(std::string name, int t){
+    GLint location = glGetUniformLocation(programID, name.c_str());
+    // std::cout << "Matrix " << name << " location : " << location << std::endl;
+    glUniform1i(location, t);
+}

@@ -10,14 +10,14 @@ Quad::Quad(){
 
     
 
-    std::cerr << "Initialising QUAD" << std::endl;
+    std::cerr << "Initialising RAY-QUAD" << std::endl;
     Mesh::numVertices = 12;
 
     glGenVertexArrays(1, &meshVAO);
     glBindVertexArray(meshVAO);
    // GLuint indices[6]={0,1,2,1,2,3};
     Mesh::indices = {0, 1, 2, 1, 2, 3};
-    std::cout << indices.size() << std::endl;
+    // std::cout << indices.size() << std::endl;
     // for(int i : indices){
     //     std::cout << i << std::endl;
     // }

@@ -13,7 +13,8 @@ class Light{
 
     Light();
     Light(glm::vec3 pos, glm::vec4 colour);
-
+    
+    void updatePosition(float time);
     glm::vec3 getPosition();
     glm::vec4 getColour();
 

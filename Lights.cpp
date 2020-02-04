@@ -23,6 +23,13 @@ glm::vec3 Light::getPosition(){
     return *pos;
 }
 
+void Light::updatePosition(float dt){
+    float x = cos(pos->x + dt);
+    float y = sin(pos->y + dt);
+    this->pos = new glm::vec3(x, y, pos->z);
+
+}
+
 glm::vec4 Light::getColour(){
     return *colour;
 }
