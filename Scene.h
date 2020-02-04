@@ -5,6 +5,7 @@
 #include <vector>
 #include "Sphere.h"
 #include "Cube.h"
+#include "Quad.h"
 #include "ShaderPipeline.h"
 
 
@@ -14,9 +15,12 @@ class Scene{
     std::vector<Mesh> scene;
     std::vector<Cube> cubes;
     std::vector<Light> lights;
+
+    bool RAY_MARCH;
     public:
 
         Scene();
+        Scene(bool RAY_MARCH);
         void draw();
         std::vector<Light> getLights();
         void sendLights(ShaderPipeline *shaders);

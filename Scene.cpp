@@ -21,6 +21,11 @@ Scene::Scene(){
     
 }
 
+Scene::Scene(bool RAY_MARCH) : RAY_MARCH(RAY_MARCH){
+    Quad *q = new Quad;
+    scene.push_back(*q);
+}
+
 std::vector<Light> Scene::getLights(){
     return lights;
 }

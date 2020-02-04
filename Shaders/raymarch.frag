@@ -8,7 +8,7 @@ const float EPSILON = 0.0001;
 in vec3 vPos;
 in vec3 vNormal;
 in vec3 eyeDir;
-in vec3 eyeThree;
+in vec3 eyeRes;
 
 out vec4 fragColour;
 
@@ -30,7 +30,7 @@ float sphereSDF(vec3 p){
 float rayMarch(vec3 marchingDirection, float start, float end){
     float depth = start;
     for(int i =0 ; i < MAX_MARCHING_STEPS; i++){
-        float dist = sphereSDF(eyeThree + depth * marchingDirection);
+        float dist = sphereSDF(eyeRes + depth * marchingDirection);
         if(dist < EPSILON){
             return depth;
         }
@@ -43,22 +43,22 @@ float rayMarch(vec3 marchingDirection, float start, float end){
     return end;
 }
 
-vec3 rayDirection(float fieldOfView, vec2 fragPos){
-    vec2 xy = fragPos - screenSize/2.0;
+vec3 rayDirection(float fieldOfView){
+    vec2 xy = gl_FragCoord.xy - screenSize/2.0;
     float z = screenSize.y/tan(radians(fieldOfView)/2.0);
     return normalize(vec3(xy, -z));
 }
 
 
 void main(){
-
-
-    vec3 dir = rayDirection(45.0, gl_FragCoord.xy);
+    vec3 dir = rayDirection(45.0);
     float dist = rayMarch(dir, MIN_DIST, MAX_DIST);
+    
     if(dist > MAX_DIST -EPSILON) {
         fragColour= vec4(0.0, 0.0, 0.0, 0.0);
         return;
     }
-    fragColour = vec4(gl_FragCoord.xy, 0.0, 1.0);
-    
+    else{
+        fragColour = vec4(1.0, 0.0, 0.0, 1.0);
+    }
 }

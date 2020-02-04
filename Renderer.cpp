@@ -42,11 +42,14 @@ void Renderer::run(){
         return;
     }
     glEnable(GL_DEPTH_TEST);
-    camera = new Camera(w);
 
+    //generate usual scene if not ray-marching, otherwise setup Quad so each pixel is given a fragment
     if(!RAY_MARCH){
-    scene = new Scene();
+        camera = new Camera(w);
+        scene = new Scene();
     }else{
+
+        scene = new Scene(RAY_MARCH);
         std::cout << "Ray-Marching enabled" << std::endl;
     }
 
@@ -70,11 +73,12 @@ void Renderer::run(){
         camera->handleMouse(w->getWindow());
 
         shaders->sendVec4("eye", camera->getEye());
-
         shaders->modelViewProjection(camera);
+        
         scene->sendLights(shaders);
-        scene->draw();
         }
+        
+        scene->draw();
 
         glfwSwapBuffers(w->getWindow());
         glFlush();

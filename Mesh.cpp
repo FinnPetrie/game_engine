@@ -6,35 +6,6 @@ Mesh::Mesh(){
 }
 
 
-void Mesh::random(){
-    //    static const GLfloat vertex_buffer[] = {
-    //     -1.0f, -1.0f, 0.0f,
-    //     1.0f, -1.0f, 0.0f,
-    //     0.0f, 1.0f, 0.0f,
-    // };
-    
-    std::cout << "Generating Mesh" << std::endl;
-    GLfloat rand;
-    for(int i =0; i < 9; i++){
-        rand = std::rand()%100;
-        // std::cout << "Random vertex: " << rand << std::endl;
-        vertices.push_back(rand);
-    }
-
-    calculateNormal();
-    // normals.push_back(normal);
-
-    glGenBuffers(1, &vertexBuffer);    
-    glGenBuffers(1, &normalBuffer);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer) * sizeof(GLfloat), vertex_buffer, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-    glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(GLfloat), normals.data(), GL_STATIC_DRAW);
-}
-
 
 
 void Mesh::attachMesh(){
@@ -65,15 +36,16 @@ void Mesh::calculateNormal(){
 
 
 
-
+//note to self, higher classes aren't getting their draw functions called
 void Mesh::draw(){
         glBindVertexArray(meshVAO);
-
         // glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         if(indices.size() > 0){
+            // std::cout << numVertices << std::endl;
+            // std::cout << "Drawing elements " << std::endl;
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-            glDrawElements(GL_QUAD_STRIP, indices.size(), GL_UNSIGNED_INT, NULL);
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
         }else{
         
         glDrawArrays(GL_TRIANGLES, 0, numVertices);
@@ -99,9 +71,8 @@ void Mesh::print(bool v, bool n){
     for(int i =0 ; i < length; i++){
         for(int j = 0; j < 3; j++){
             std::string element = "";
-
             switch(j){
-                case 0 :
+                case 0:
                     element = "X";
                     break;
                 case 1:
@@ -117,6 +88,5 @@ void Mesh::print(bool v, bool n){
             }
         }
     }
-
     //removed normal printing
 }

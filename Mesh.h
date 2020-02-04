@@ -10,7 +10,7 @@ protected:
     std::vector<GLfloat> vertices;
    
     std::vector<glm::vec3> normals;
-    std::vector<int> indices;
+    std::vector<unsigned int> indices;
 
     glm::vec3 colour;
     GLuint meshVAO;
