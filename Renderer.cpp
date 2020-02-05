@@ -63,7 +63,7 @@ void Renderer::run(){
         camera->handleMouse(w->getWindow());
         //-------------------
         shaders->use();    
-        shaders->sendVec2("screenSize", glm::vec2(w->getHeight(), w->getWidth()));
+        shaders->sendVec2("screenSize", glm::vec2(w->getWidth(), w->getHeight()));
         //-------------------
         if(RAY_MARCH){
             // shaders->sendVec4("eye", glm::vec4(0, 0, 5.0, 0));

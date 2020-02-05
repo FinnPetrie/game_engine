@@ -43,10 +43,24 @@ float differenceSDF(float distA, float distB){
     return max(distA, -distB);
 }
 
-float sphereSDF(vec3 p, float c, float radius){
-    return length(mod(p, 1.0) - c ) - radius;
+float sphereSDF(vec3 p, vec3 c, float radius){
+    p.xyz = mod(p.xyz, 1.0) - c;
+    return length(p) - radius;
 }
-
+/**
+float serpinskiSDF(vec3 p, int Iterations){
+    vec3 a1 = vec3(1, 1, 1);
+    vec3 a2 = vec3(-1, -1, 1);
+    vec3 a3 = vec3(1, -1, -1);
+    vec3 a4 = vec3(-1, 1, -1);
+    vec3 c;
+    int n = 0;
+    float dist, d;
+    while(n < Iterations){
+        c = a1; dist = length(z - a1);
+        d = length
+    }
+}*/
 float cubeSDF(vec3 p){
     vec3 d = abs(p) - vec3(1.0, 1.0, 1.0);
 
@@ -54,14 +68,14 @@ float cubeSDF(vec3 p){
 
     float outsideDistance = length(max(d, 0.0));
 
-    return insideDistance + outsideDistance;
+    return mod(insideDistance + outsideDistance, 1.0);
 }
 
 float sceneSDF(vec3 p){
-    float sphereDist = sphereSDF(p, 0.0, 0.1);
+   // float sphereDist = sphereSDF(p, 0.0, 0.1);
     //float cubeDist = cubeSDF(p);
     //return differenceSDF(cubeDist, sphereDist);
-    return sphereDist;
+    return sphereSDF(p, vec3(0.5), 0.1);
 }
 
 mat4 viewMatrix(vec3 eyeT, vec3 centre, vec3 up){
@@ -145,6 +159,6 @@ void main(){
 
     vec3 p = eye.xyz + dist * worldDir;
     
-    vec3 colour = lighting(p, 0.5, 1.0, 4);
+    vec3 colour = lighting(p, 0.01, 1.0, 4)*p;
     fragColour = vec4(clamp(colour, 0.0, 1.0), 1.0);
 }
