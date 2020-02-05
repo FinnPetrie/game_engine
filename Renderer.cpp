@@ -59,6 +59,8 @@ void Renderer::run(){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();
 
+        camera->handleKeyboard(w->getWindow());
+        camera->handleMouse(w->getWindow());
         //-------------------
         shaders->use();    
         shaders->sendVec2("screenSize", glm::vec2(w->getHeight(), w->getWidth()));
@@ -66,7 +68,8 @@ void Renderer::run(){
         if(RAY_MARCH){
             // shaders->sendVec4("eye", glm::vec4(0, 0, 5.0, 0));
             shaders->sendMatrix("view", camera->getView());
-
+            shaders->sendVec3("cameraUp", camera->getUp());
+            shaders->sendVec3("cameraCentre", camera->getDirection());
         }
         //-------------------
         if(!RAY_MARCH){
@@ -75,8 +78,7 @@ void Renderer::run(){
         
         }
         //-------------------
-        camera->handleKeyboard(w->getWindow());
-        camera->handleMouse(w->getWindow());
+        
         shaders->sendVec4("eye", camera->getEye());
         scene->sendLights(shaders);
         scene->draw();

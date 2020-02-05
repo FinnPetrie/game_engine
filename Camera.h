@@ -40,6 +40,8 @@ public:
     glm::mat4 getModel();
     glm::mat4 getProjection();
     
+    glm::vec3 getUp();
+    glm::vec3 getDirection();
     glm::vec4 getEye();
 };
 

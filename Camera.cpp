@@ -90,3 +90,11 @@ glm::vec4 Camera::getEye(){
     
     return glm::vec4(*cameraPos, 1.0f);
 }
+
+glm::vec3 Camera::getUp(){
+    return *up;
+}
+
+glm::vec3 Camera::getDirection(){
+    return *cameraPos + *cameraFront;
+}

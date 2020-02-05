@@ -92,7 +92,7 @@ vec3 lighting(vec3 p,  float ambientStrength, float specularStrength, float alph
     vec3 diffuse = vec3(0,0,0);
     vec3 specular = vec3(0,0,0);
     float spec = 0;
-    vec3 v = normalize(eyeRes - p);
+    vec3 v = normalize(eye.xyz - p);
 
     for(int i =0 ; i < numLights; i++){
         vec3 lightDir = normalize(lights[i].pos - p);
@@ -133,8 +133,8 @@ vec3 rayDirection(float fieldOfView){
 void main(){
     vec3 dir = rayDirection(45.0);
 
-    //mat4 viewToWorld = viewMatrix(eyeRes, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
-    vec3 worldDir = (view * vec4(dir, 0.0)).xyz;
+    mat4 viewToWorld = viewMatrix(eye.xyz, cameraCentre, cameraUp);
+    vec3 worldDir = (viewToWorld * vec4(dir, 0.0)).xyz;
 
     float dist = rayMarch(worldDir, MIN_DIST, MAX_DIST);
     
