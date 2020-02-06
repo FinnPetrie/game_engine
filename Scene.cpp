@@ -17,7 +17,8 @@ Scene::Scene(){
 Scene::Scene(bool RAY_MARCH) : RAY_MARCH(RAY_MARCH){
     Quad *q = new Quad;
     scene.push_back(*q);
-    generateLights(1);
+    Light l(glm::vec3(10.0, 10.0, -10.0), glm::vec4(0.5, 0.2, 0.3, 1.0));
+    lights.push_back(l);
 }
 
 std::vector<Light> Scene::getLights(){

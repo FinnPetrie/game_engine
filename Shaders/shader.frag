@@ -29,7 +29,7 @@ vec3 lighting(vec3 n, float ambientStrength, float specularStrength, float alpha
 
     for(int i =0 ; i < 10; i++){
         vec3 lightDir = normalize(lights[i].pos - vPos);
-        vec3 reflection = normalize(2*(dot(n, -lightDir)*n - lightDir));
+        vec3 reflection = reflect(n, lightDir);
 
         ambient += ambientStrength*lights[i].colour.xyz;
         diff += max(dot(n, lightDir), 0.0);

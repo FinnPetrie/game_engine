@@ -20,10 +20,10 @@ void Renderer::createShaders(){
     std::vector<std::string> paths;
     std::vector<GLenum> types;
     if(!RAY_MARCH){
-    paths.push_back("Shaders/shader.vertex");
+    paths.push_back("Shaders/shader.vert");
     paths.push_back("Shaders/shader.frag");
     }else{
-        paths.push_back("Shaders/raymarch.vertex");
+        paths.push_back("Shaders/raymarch.vert");
         paths.push_back("Shaders/raymarch.frag");
     }
     types.push_back(GL_VERTEX_SHADER);

@@ -14,7 +14,7 @@ Camera::Camera(Window* window){
                                     glm::vec3(0.0f, 1.0f, 0.0f)));
                                     
     cameraFront = new glm::vec3(0.0f, 0.0f, 1.0f);
-    speed = 0.01f;
+    speed = 0.1f;
     yaw = -90.0f;
     pitch = 0.0f;
     // pitch = 0;
@@ -24,7 +24,7 @@ Camera::Camera(Window* window){
 
     model = new glm::mat4(1.0f);
     // glm::mat4 model = glm::mat4(1.0f);
-    projection = new glm::mat4(glm::perspective(glm::radians(45.0f), (float)window->getHeight()/(float)window->getWidth(), 0.1f, 100.0f));  
+    projection = new glm::mat4(glm::perspective(glm::radians(45.0f), (float)window->getWidth()/(float)window->getHeight(), 0.1f, 100.0f));  
   
 }
 
