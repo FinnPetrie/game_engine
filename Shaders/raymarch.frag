@@ -8,7 +8,7 @@
 const int MAX_MARCHING_STEPS = 400;
 const float MIN_DIST = 0.0;
 const float MAX_DIST = 1000.0;
-const float EPSILON = 0.00001;
+const float EPSILON = 0.0001;
 const float Iterations = 15;
 const vec4 background = vec4(0, 0, 0, 0);
 const vec4 co = vec4(1, 1, 1, 0);
@@ -74,38 +74,10 @@ float sphereSDF(vec3 p, vec3 c, float radius){
     return length(p) - radius;
 }
 
-float juliaMap( in vec3 p, out vec4 oTrap, in vec4 c )
-{
-    vec4 z = vec4(p,0.0);
-    float md2 = 1.0;
-    float mz2 = dot(z,z);
-
-    vec4 trap = vec4(abs(z.xyz),dot(z,z));
-
-    float n = 1.0;
-    for( int i=0; i<Iterations; i++ )
-    {
-        // dz -> 2·z·dz, meaning |dz| -> 2·|z|·|dz|
-        // Now we take thr 2.0 out of the loop and do it at the end with an exp2
-        md2 *= mz2;
-        // z  -> z^2 + c
-        z = quatSq(z) + c;  
-
-        trap = min( trap, vec4(abs(z.xyz),dot(z,z)) );
-
-        mz2 = dot(z,z);
-        if(mz2>4.0) break;
-        n += 1.0;
-    }
-    
-    oTrap = trap;
-
-    return 0.25*sqrt(mz2/md2)*exp2(-n)*log(mz2);  // d = 0.5·|z|·log|z| / |dz|
-}
-
 float planeDE(vec3 p, vec4 n){
      return dot(p,n.xyz) + n.w;
 }
+
 float juliaDE(vec3 p, vec4 translation){
     vec4 zN = vec4(p, 0.0);
     vec4 zPrime = vec4(1, 0, 0, 0);
@@ -200,26 +172,14 @@ float cubeSDF(vec3 p){
 }
 
 float sceneSDF(vec3 p){
-    // float sphereDist = sdHexPrism(p, vec2(1.0, 1.0));
+    float sphereDist = sdHexPrism(p, vec2(1.0, 1.0));
     float planeDist = planeDE(p, normalize(vec4(0, 1, 0, 0)));
     float bfact = smoothstep( length(p), 0, 1 );
-    // // // return sphereDist;
-    // return mix(sphereDist, planeDist, bfact);
-     float juliaDistance = juliaDE(p, vec4(1, 1, 1,0));
-    //  return juliaDistance;
-    return mix(planeDist, juliaDistance, bfact);
+   
+    return mix(sphereDist, planeDist, bfact);
 }
 
-// float sceneSDF_Quater(vec3 p, vec4 c){
-//     // float sphereDist = sdHexPrism(p, vec2(1.0, 1.0));
-//     // float planeDist = planeDE(p, normalize(vec4(0, 1, 0, 0)));
-//     // float bfact = smoothstep( length(p), 0, 1 );
-//     // // // return sphereDist;
-//     // return mix(sphereDist, planeDist, bfact);
-//      float juliaDistance = juli(p, c);
-//      return juliaDistance;
-//     // return mix(planeDist, juliaDistance, bfact);
-// }
+
 mat4 viewMatrix(vec3 eyeT, vec3 centre, vec3 up){
     vec3 f = normalize(centre - eyeT);
     vec3 s = normalize(cross(f, up));
@@ -244,15 +204,6 @@ vec3 estimateNormal( vec3 p )
                       k.xxx*sceneSDF( p + k.xxx*h ) );
 }
 
-vec3 calcNormal( in vec3 pos, in vec4 c )
-{
-    vec4 kk;
-    vec2 e = vec2(1.0,-1.0)*0.5773*0.001;
-    return normalize( e.xyy*juliaMap( pos + e.xyy, kk, c ) + 
-					  e.yyx*juliaMap( pos + e.yyx, kk, c ) + 
-					  e.yxy*juliaMap( pos + e.yxy, kk, c ) + 
-					  e.xxx*juliaMap( pos + e.xxx, kk, c ) );
-}
 
 vec4 rayMarch(vec4 rayDirection, vec4 p, float start, float end){
     float depth = start;
@@ -261,7 +212,7 @@ vec4 rayMarch(vec4 rayDirection, vec4 p, float start, float end){
    
     vec4 tmp;
     for(steps =0 ; steps < MAX_MARCHING_STEPS; steps++){
-        float dist = juliaMap(p.xyz + depth * rayDirection.xyz, tmp, co);
+        float dist = sceneSDF(p.xyz +depth*rayDirection.xyz);
         totalDistance += dist;
 
         if(dist < EPSILON){
@@ -291,6 +242,7 @@ float softShadow(in vec3 ray_origin, in vec3 ray_direction, float mint, float tm
     }
     return clamp( res, 0.0, 1.0 );
 }
+
  vec4 shadows(vec3 p, vec3 light){
     vec3 lightDir = normalize(light - p);
     vec4 isShaded = rayMarch(vec4(lightDir, 1.0), vec4(normalize(p), 1.0), MIN_DIST, MAX_DIST);
@@ -298,19 +250,7 @@ float softShadow(in vec3 ray_origin, in vec3 ray_direction, float mint, float tm
  }
 
 
-float juliaShadows(in vec3 ro, in vec3 rd, float mint, float k, in vec4 c){
-    float res = 1.0;
-    float t = mint;
-    for( int i=0; i<64; i++ )
-    {
-        vec4 kk;
-        float h = juliaMap(ro + rd*t, kk, c);
-        res = min( res, k*h/t );
-        if( res<0.001 ) break;
-        t += clamp( h, 0.01, 0.5 );
-    }
-    return clamp(res,0.0,1.0);
-}
+
  float shadow( in vec3 ro, in vec3 rd, float mint, float maxt )
 {
     for( float t=mint; t<maxt; )
@@ -325,7 +265,7 @@ float juliaShadows(in vec3 ro, in vec3 rd, float mint, float k, in vec4 c){
 
 vec3 lighting(vec3 p,  float ambientStrength, float specularStrength, float alpha){
     
-    vec3 n = calcNormal(p, co);
+    vec3 n = estimateNormal(p);
     
     float diff = 0;
     vec3 ambient = ambientStrength*vec3(1,1,1);
@@ -341,7 +281,7 @@ vec3 lighting(vec3 p,  float ambientStrength, float specularStrength, float alph
         vec3 reflection = reflect(n, -lightDir);
         diff += max(dot(n, lightDir), 0.0);
         diffuse += diff*lights[i].colour.rgb;
-        diffuse *= juliaShadows(p, lightDir, 0.02, 255, co);
+        diffuse *= softShadow(p, lightDir, 0.02, 255);
         spec += pow(max(dot(reflection, v), 0.0), alpha);
         specular += specularStrength*spec*lights[i].colour.rgb;
         }
