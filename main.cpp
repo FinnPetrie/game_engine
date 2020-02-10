@@ -1,6 +1,6 @@
 #include "Renderer.h"
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 3000
+#define HEIGHT 2000
 int main(int argc, char *argv[]){
     
     bool ray_march_enable = false;

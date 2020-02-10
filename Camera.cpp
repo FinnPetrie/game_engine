@@ -14,7 +14,7 @@ Camera::Camera(Window* window){
                                     glm::vec3(0.0f, 1.0f, 0.0f)));
                                     
     cameraFront = new glm::vec3(0.0f, 0.0f, 1.0f);
-    speed = 0.1f;
+    speed = 0.01f;
     yaw = -90.0f;
     pitch = 0.0f;
     // pitch = 0;
