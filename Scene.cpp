@@ -4,11 +4,11 @@ Scene::Scene(){
     // Mesh *m;
     // m = new Mesh();
     // scene.push_back(*m);
-    Cube *c;
-    c = new Cube();
-    scene.push_back(*c);
-    // Sphere *s = new Sphere(20, 20, 1.0);
-    // scene.push_back(*s);
+    // Cube *c;
+    // c = new Cube();
+    // scene.push_back(*c);
+    Sphere *s = new Sphere(20, 20, 1);
+    scene.push_back(*s);
     generateLights(2);
    
     

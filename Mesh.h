@@ -26,8 +26,8 @@ protected:
 public:
     
     Mesh();
-    void draw();
-    void attachMesh();
+    virtual void draw();
+    virtual void attachMesh();
     void bindMesh();
     void random();
     void addVertex(GLfloat x, GLfloat y, GLfloat z);

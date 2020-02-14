@@ -4,11 +4,12 @@
 #define GLOW false
 #define AMBIENT_OCCLUSION_STRENGTH 0.008
 #define FOG false
-
+#define REFLECTION TRUE
+#define REFLECTION_DEPTH 5
 const int MAX_MARCHING_STEPS = 400;
 const float MIN_DIST = 0.0;
 const float MAX_DIST = 1000.0;
-const float EPSILON = 0.0001;
+const float EPSILON = 0.01;
 const float Iterations = 15;
 const vec4 background = vec4(0, 0, 0, 0);
 const vec4 co = vec4(1, 1, 1, 0);
@@ -93,12 +94,13 @@ float juliaDE(vec3 p, vec4 translation){
     return jDist;
 }
 
+
 float DE(vec3 z)
 {
-    float Offset = 3.0;
+    float Scale = 2.0;
+    float Offset = 10.0;
     float r;
     int n = 0;
-    float Scale = 2.0;
     while (n < Iterations) {
        if(z.x+z.y<0) z.xy = -z.yx; // fold 1
        if(z.x+z.z<0) z.xz = -z.zx; // fold 2
@@ -108,6 +110,7 @@ float DE(vec3 z)
     }
     return (length(z) ) * pow(Scale, -float(n));
 }
+
 
 
 float terrain(float x, float z){
@@ -172,11 +175,13 @@ float cubeSDF(vec3 p){
 }
 
 float sceneSDF(vec3 p){
-    float sphereDist = sdHexPrism(p, vec2(1.0, 1.0));
-    float planeDist = planeDE(p, normalize(vec4(0, 1, 0, 0)));
-    float bfact = smoothstep( length(p), 0, 1 );
+    // float sphereDist = sdHexPrism(p, vec2(1.0, 1.0));
+    // float planeDist = planeDE(p, normalize(vec4(0, 1, 0, 0)));
+    // float bfact = smoothstep( length(p), 0, 1 );
    
-    return mix(sphereDist, planeDist, bfact);
+    // return mix(sphereDist, planeDist, bfact);
+    float distance = DE(p);
+    return distance;
 }
 
 
