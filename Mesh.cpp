@@ -43,6 +43,7 @@ void Mesh::draw(){
         
         if(indices.size() > 0){
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+            // glDrawArrays(GL_TRIANGLE_STRIP, 0, numVertices);
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
         }else{
         glDrawArrays(GL_TRIANGLES, 0, numVertices);

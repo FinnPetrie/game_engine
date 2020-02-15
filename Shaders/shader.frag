@@ -48,6 +48,6 @@ void main(){
     vec3 objectColour = vec3(0.5, 0.2, 0.78);
 
     vec3 result = lightLevel*objectColour;
-    //fragColour = vec4(result, 1.0);
-    fragColour = vec4(objectColour, 1.0);
+    fragColour = vec4(result, 1.0);
+    // fragColour = vec4(objectColour, 1.0);
 }

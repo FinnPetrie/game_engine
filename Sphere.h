@@ -10,13 +10,13 @@ class Sphere : public Mesh{
     private:
 
     std::vector<glm::vec3> triangleList;
-        double radius;
+        float radius;
         void genIndices(int longitude, int latitude);
         std::vector<float> buildUnitPositiveX(int subd);
     public:
         Sphere(bool cube, int subd);
         Sphere(int subd);
-        Sphere(int longitude, int latitude, double radius);
+        Sphere(int longitude, int latitude, float radius);
         void print();
         void attachMesh();
 

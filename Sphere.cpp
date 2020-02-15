@@ -2,103 +2,44 @@
 
 
 
-Sphere::Sphere(int longitudeCount, int latitudeCount, double radius) : Mesh(){
+Sphere::Sphere(int longitudeCount, int latitudeCount, float radius) : Mesh(){
  
+    float latitudeStep = 2*M_PI/latitudeCount;
+    float longitudeStep = M_PI/longitudeCount;
 
-    double longitude = 2*M_PI/longitudeCount;
-    double latitude = M_PI/latitudeCount;
-    double longAngle, latAngle;
-    double r = 1.0f/radius;
-    double x, y, xy, z;
-    double nx, ny, nz;
+    float longAngle, latAngle;
+    float r = 1.0f/radius;
+    float x, y, xy, z;
+    float nx, ny, nz;
 
     //define a sphere as a function of two angles
-    std::cout << longitudeCount << std::endl;
-    std::cout << latitudeCount << std::endl;
-    std::cout << "Longitude: " << longitude << std::endl;
-    std::cout << "Latitude: " << latitude << std::endl;
-    //polar iteration
-    for(int i = 0; i < longitudeCount; i++){
-        // std::cout << "i: " << i << std::endl;
-        //equatorial iteration
-        longAngle = M_PI/2 - i*longitude;
-        xy = radius*cos(longAngle);
-        z = radius*sin(longAngle);
-        for(int j = 0; j < latitudeCount; j ++){
-            // std::cout << "j: " << j << std::endl;
-            latAngle = j*latitude;
-            //sample our spherical parameterisation
-            x = xy*cos(latAngle);
-            y = xy*sin(latAngle);
-            z = sin(latAngle);
-            // std::cout << x << y << z << std::endl;
-            Mesh::addVertex(x, y, z);
-            nx = x*r;
-            ny = y*r;
-            nz = z*r;
-            glm::vec3 normal(nx, ny,nz);
-            Mesh::normals.push_back(normal);
+    for(int i =0 ; i <= longitudeCount; ++i){
+        longAngle = M_PI/2 - i*longitudeStep;
+        
+        xy = radius*cosf(longAngle);
+        z = radius*sinf(longAngle);
+        
+        for(int j = 0; j <= latitudeCount; ++j){
+
+            latAngle = j * latitudeStep;
+
+            x = xy*cosf(latAngle);
+            y = xy*sinf(latAngle);
+            addVertex(x, y, z);
+
+            nx = r * x;
+            ny = r * y;
+            nz = r * z;
+
+            glm::vec3 normal(nx, ny, nz);
+            normals.push_back(normal);
         }
+    
     }
-    //for now
-    // print();
+
     genIndices(longitudeCount, latitudeCount);
     attachMesh();
-    // print();
-
 }
-
-Sphere::Sphere(bool cube, int subd){
-    
-}
-
-
-std::vector<float> Sphere::buildUnitPositiveX(int subd){
-
-    const float DEG2RAD = acos(-1)/180.0f;
-    std::vector<float> verts;
-    float n1[3];
-    float n2[3];
-    float v[3];
-    float a1;
-    float a2;
-
-    int pointsPerRow = (int)pow(2, subd) + 1;
-
-    for(unsigned int i = 0; i < pointsPerRow; ++i){
-        a2 = DEG2RAD*(45.0f - 90.0f * i/(pointsPerRow - 1));
-        n2[0] = -sin(a2);
-        n2[1] = cos(a2);
-        n2[2] = 0;
-
-        for(unsigned int j = 0; j < pointsPerRow; ++j){
-            
-            a1 = DEG2RAD*(-45.0f + 90.0f * j/(pointsPerRow - 1));
-            n1[0] = -sin(a1);
-            n1[1] = 0;
-            n1[2] = -cos(a1);
-
-            v[0] = n1[1] * n2[2] - n1[2] * n2[1];
-            v[1] = n1[2] * n2[0] - n1[0] * n2[2];
-            v[2] = n1[0] * n2[1] - n1[1] * n2[0];
-
-            // normalize direction vector
-            float scale = 1 / sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-            v[0] *= scale;
-            v[1] *= scale;
-            v[2] *= scale;
-
-            // Triangle t(v);
-            verts.push_back(v[0]);
-            verts.push_back(v[1]);
-            verts.push_back(v[2]);
-        }
-    }
-    return verts;
-}
-
-
-
 
 
 
@@ -107,7 +48,7 @@ void Sphere::genIndices(int longitudeCount, int latitudeCount){
     for(int i =0; i < longitudeCount; i++){
         k1 = i *(latitudeCount + 1);
         k2 = k1 + latitudeCount + 1;
-        for(int j = 0; j < latitudeCount; j++){
+        for(int j = 0; j < latitudeCount; j++, k1++, k2++){
             if (i != 0){
                 indices.push_back(k1);
                 indices.push_back(k2);
