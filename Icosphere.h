@@ -9,7 +9,7 @@
 
 class Icosphere : public Mesh{
     private:
-
+    std::vector<glm::vec3> verts;
     void subdivide();
     void Icosahedron(float r);
     void attachMesh();

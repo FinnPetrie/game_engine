@@ -30,6 +30,7 @@ public:
     virtual void attachMesh();
     void bindMesh();
     void random();
+    void addIndex(GLuint i, GLuint j, GLuint k);
     void addVertex(GLfloat x, GLfloat y, GLfloat z);
     void print(bool v, bool n);
     void test();

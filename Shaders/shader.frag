@@ -49,5 +49,5 @@ void main(){
 
     vec3 result = lightLevel*objectColour;
     fragColour = vec4(result, 1.0);
-    // fragColour = vec4(objectColour, 1.0);
+//    fragColour = vec4(objectColour, 1.0);
 }

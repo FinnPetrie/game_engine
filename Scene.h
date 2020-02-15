@@ -6,6 +6,7 @@
 #include "Sphere.h"
 #include "Cube.h"
 #include "Quad.h"
+#include "Icosphere.h"
 #include "ShaderPipeline.h"
 
 

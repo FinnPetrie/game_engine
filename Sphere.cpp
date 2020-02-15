@@ -42,27 +42,161 @@ Sphere::Sphere(int longitudeCount, int latitudeCount, float radius) : Mesh(){
 }
 
 
+Sphere::Sphere(int subd, float radius){
+    //sample +Z face
 
-void Sphere::genIndices(int longitudeCount, int latitudeCount){
+    cubeSphere = true;
+    for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
+        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
+            glm::vec3 p(1 - 2*s, 1-2*t, 1);
+            glm::vec3 n = glm::normalize(p);
+            normals.push_back(n);
+            n *= radius;
+            vertices.push_back(n.x);
+            vertices.push_back(n.y);
+            vertices.push_back(n.z);
+        }
+    }
+    //sample -Z face
+    for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
+        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
+            glm::vec3 p(1 - 2*s, 1-2*t, -1);
+            glm::vec3 n = glm::normalize(p);
+            normals.push_back(n);
+
+            n *= radius;
+
+            vertices.push_back(n.x);
+            vertices.push_back(n.y);
+            vertices.push_back(n.z);
+        }
+    }
+
+    //sample +X face
+       for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
+        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
+            glm::vec3 p(1, 1-2*t, 1 - 2*s);
+            glm::vec3 n = glm::normalize(p);
+            normals.push_back(n);
+
+             n *= radius;
+
+            vertices.push_back(n.x);
+            vertices.push_back(n.y);
+            vertices.push_back(n.z);
+        }
+    }
+
+    //sample -X face
+      for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
+        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
+            glm::vec3 p(-1, 1-2*t, 1 - 2*s);
+            glm::vec3 n = glm::normalize(p);
+            normals.push_back(n);
+
+            n *= radius;
+
+            vertices.push_back(n.x);
+            vertices.push_back(n.y);
+            vertices.push_back(n.z);
+        }
+    }
+
+    //+Y
+    for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
+        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
+            glm::vec3 p(1 - 2*s,   1, 1 - 2*t);
+            glm::vec3 n = glm::normalize(p);
+            normals.push_back(n);
+
+            n *= radius;
+            
+            vertices.push_back(n.x);
+            vertices.push_back(n.y);
+            vertices.push_back(n.z);
+        }
+    }
+
+        //-y
+        int numIndices = 0;
+
+      for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
+        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
+            glm::vec3 p(1 - 2*s,   -1, 1 - 2*t);
+            glm::vec3 n = glm::normalize(p);
+            normals.push_back(n);
+
+            n *= radius;
+
+            vertices.push_back(n.x);
+            vertices.push_back(n.y);
+            vertices.push_back(n.z);
+        }
+        numIndices++;
+    }
+    genIndices(6*numIndices, 6*numIndices);
+    attachMesh();
+}
+
+
+void Sphere::genIndices(int xNum, int yNum){
     int k1, k2;
-    for(int i =0; i < longitudeCount; i++){
-        k1 = i *(latitudeCount + 1);
-        k2 = k1 + latitudeCount + 1;
-        for(int j = 0; j < latitudeCount; j++, k1++, k2++){
+
+    if(!cubeSphere){
+    for(int i =0; i < xNum; i++){
+        k1 = i *(yNum + 1);
+        k2 = k1 + yNum + 1;
+        for(int j = 0; j < yNum; j++, k1++, k2++){
             if (i != 0){
                 indices.push_back(k1);
                 indices.push_back(k2);
                 indices.push_back(k1 + 1);
             }
 
-            if (i != (longitudeCount - 1)){
+            if (i != (xNum - 1)){
                 indices.push_back(k1+1);
                 indices.push_back(k2);
                 indices.push_back(k2 + 1);
+                }
             }
+        }
+    }else{
+
+        //look more into how this works.
+        const int k = xNum + 1;
+        for(int face = 0; face < 6; face++){
+            for(int i =0 ;i < xNum; i++){
+               const bool bottom = i < (xNum/2);
+                for(int j =0 ;j < yNum; j++){
+
+                    const bool left = j < (xNum/2);
+                    int a = (face*k +j) *k + i;
+                    int b = (face*k +j) * k + i + 1;
+                    int c = (face*k + j + 1) *k + i;
+                    int d = (face *k + j + 1)* k + i + 1;
+                    if(bottom ^ left){
+                        indices.push_back(a);
+                        indices.push_back(b);
+                        indices.push_back(d);
+                        indices.push_back(b);
+                        indices.push_back(c);
+                        indices.push_back(d);
+                    }else{
+                    indices.push_back(a);
+                    indices.push_back(b);
+                    indices.push_back(c);
+                    indices.push_back(a);
+                    indices.push_back(c);
+                    indices.push_back(d);
+                    }
+                }
+            }
+            //else cubeSphere
         }
     }
 }
+
+
 
 
 void Sphere::attachMesh(){

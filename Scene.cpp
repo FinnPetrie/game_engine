@@ -7,8 +7,9 @@ Scene::Scene(){
     // Cube *c;
     // c = new Cube();
     // scene.push_back(*c);
-    Sphere *s = new Sphere(20, 20, 1);
-    scene.push_back(*s);
+    // Sphere *s = new Sphere(20, 20, 1);
+    Sphere *c = new Sphere(200, 200, 1);
+    scene.push_back(*c);
     generateLights(2);
    
     

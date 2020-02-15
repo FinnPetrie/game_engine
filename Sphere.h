@@ -8,14 +8,13 @@ using VertexList = std::vector<glm::vec3>;
 class Sphere : public Mesh{
 
     private:
-
+    bool cubeSphere = false;
     std::vector<glm::vec3> triangleList;
         float radius;
         void genIndices(int longitude, int latitude);
         std::vector<float> buildUnitPositiveX(int subd);
     public:
-        Sphere(bool cube, int subd);
-        Sphere(int subd);
+        Sphere(int subd, float r);
         Sphere(int longitude, int latitude, float radius);
         void print();
         void attachMesh();
