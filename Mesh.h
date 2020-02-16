@@ -7,11 +7,13 @@ class Mesh{
 
 protected:
 //change this to vec3s sooner or later
-    std::vector<GLfloat> vertices;
+    std::vector<glm::vec3> vertices;
    
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
 
+    bool RAY_MARCHING = false;
+    bool DEBUG = false;
     glm::vec3 colour;
     GLuint meshVAO;
     GLuint vertexBuffer;
@@ -25,13 +27,21 @@ protected:
 
 public:
     
-    Mesh();
+    Mesh(bool RAY_MARCHING, bool DEBUG);
+    Mesh(bool DEBUG);
     virtual void draw();
     virtual void attachMesh();
+
+    std::vector<glm::vec3> getVertices();
+    glm::vec3 getVertex(int index);
+    void setVertex(int index, glm::vec3);
+
     void bindMesh();
     void random();
-    void addIndex(GLuint i, GLuint j, GLuint k);
+    void addTriIndex(GLuint i, GLuint j, GLuint k);
     void addVertex(GLfloat x, GLfloat y, GLfloat z);
+
+    
     void print(bool v, bool n);
     void test();
 };

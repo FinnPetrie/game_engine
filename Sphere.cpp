@@ -2,7 +2,7 @@
 
 
 
-Sphere::Sphere(int longitudeCount, int latitudeCount, float radius) : Mesh(){
+Sphere::Sphere(int longitudeCount, int latitudeCount, float radius, bool DEBUG) : Mesh(DEBUG){
  
     float latitudeStep = 2*M_PI/latitudeCount;
     float longitudeStep = M_PI/longitudeCount;
@@ -42,99 +42,74 @@ Sphere::Sphere(int longitudeCount, int latitudeCount, float radius) : Mesh(){
 }
 
 
-Sphere::Sphere(int subd, float radius){
+Sphere::Sphere(int subd, float radius, float step, bool DEBUG) : Mesh(false, DEBUG){
     //sample +Z face
 
     cubeSphere = true;
-    for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
-        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
-            glm::vec3 p(1 - 2*s, 1-2*t, 1);
-            glm::vec3 n = glm::normalize(p);
-            normals.push_back(n);
-            n *= radius;
-            vertices.push_back(n.x);
-            vertices.push_back(n.y);
-            vertices.push_back(n.z);
-        }
+    int numIndices;
+    int x =0;
+    
+    std::cout << "\n: X: " << x << std::endl;
+    float stepSize = step/float(subd);
+    // glm::vec3 *p;
+    // for(float s = 0; s <= 1.0f; s +=stepSize){
+    //         x++;
+    //         // std::cout << "S Value : " << s << std::endl;
+    //         for(float t = 0; t <= 1.0f; t += stepSize){
+    //             // std::cout << "T Value : " << t << std::endl;
+              
+    //             p = new glm::vec3(1 - 2*s, 1-2*t, 1);
+                
+
+    //             glm::vec3 n = glm::normalize(*p);
+    //             normals.push_back(n);
+    //             n *= radius;
+    //             std::cout << "Value : " << glm::to_string(n) << std::endl;
+    //             vertices.push_back(n);
+    //             }
+    //         }
+
+
+
+    for(int face = 0; face < 6; face++){
+        glm::vec3 *p;
+        x = 0;
+        for(float s = 0; s <= 1.0f; s +=stepSize){
+            x++;
+            // std::cout << "S Value : " << s << std::endl;
+            for(float t = 0; t <= 1.0f; t += stepSize){
+
+                switch(face){
+                    case 0:
+                        p = new glm::vec3(1 - 2*s, 1-2*t, 1);
+                        break;
+                    case 1:
+                        p = new glm::vec3(1,  1 - 2*s, 1 - 2*t);
+                        break;
+                    case 2:
+                        p = new glm::vec3(1-2*s, -1, 1-2*t);
+                        break;
+                    case 3:
+                        p = new glm::vec3(-1, 1-2*s, 1- 2*t);
+                        break;
+                    case 4: 
+                        p = new glm::vec3(1-2*s, 1, 1-2*t);
+                        break;
+                    case 5:
+                        p = new glm::vec3(1-2*s, 1-2*t, -1);
+                        break;
+                }
+
+                glm::vec3 n = glm::normalize(*p);
+                normals.push_back(n);
+                n *= radius;
+                std::cout << "Value : " << glm::to_string(n) << std::endl;
+                vertices.push_back(n);
+                }
+            }
     }
-    //sample -Z face
-    for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
-        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
-            glm::vec3 p(1 - 2*s, 1-2*t, -1);
-            glm::vec3 n = glm::normalize(p);
-            normals.push_back(n);
-
-            n *= radius;
-
-            vertices.push_back(n.x);
-            vertices.push_back(n.y);
-            vertices.push_back(n.z);
-        }
-    }
-
-    //sample +X face
-       for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
-        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
-            glm::vec3 p(1, 1-2*t, 1 - 2*s);
-            glm::vec3 n = glm::normalize(p);
-            normals.push_back(n);
-
-             n *= radius;
-
-            vertices.push_back(n.x);
-            vertices.push_back(n.y);
-            vertices.push_back(n.z);
-        }
-    }
-
-    //sample -X face
-      for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
-        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
-            glm::vec3 p(-1, 1-2*t, 1 - 2*s);
-            glm::vec3 n = glm::normalize(p);
-            normals.push_back(n);
-
-            n *= radius;
-
-            vertices.push_back(n.x);
-            vertices.push_back(n.y);
-            vertices.push_back(n.z);
-        }
-    }
-
-    //+Y
-    for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
-        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
-            glm::vec3 p(1 - 2*s,   1, 1 - 2*t);
-            glm::vec3 n = glm::normalize(p);
-            normals.push_back(n);
-
-            n *= radius;
-            
-            vertices.push_back(n.x);
-            vertices.push_back(n.y);
-            vertices.push_back(n.z);
-        }
-    }
-
-        //-y
-        int numIndices = 0;
-
-      for(float s = 0; s < 1.0f; s+= 0.1/float(subd)){
-        for(float t = 0; t < 1.0f; t += 0.1/float(subd)){
-            glm::vec3 p(1 - 2*s,   -1, 1 - 2*t);
-            glm::vec3 n = glm::normalize(p);
-            normals.push_back(n);
-
-            n *= radius;
-
-            vertices.push_back(n.x);
-            vertices.push_back(n.y);
-            vertices.push_back(n.z);
-        }
-        numIndices++;
-    }
-    genIndices(6*numIndices, 6*numIndices);
+    numIndices = x;
+    genIndices(numIndices, numIndices);
     attachMesh();
 }
 
@@ -162,41 +137,36 @@ void Sphere::genIndices(int xNum, int yNum){
         }
     }else{
 
-        //look more into how this works.
-        const int k = xNum + 1;
-        for(int face = 0; face < 6; face++){
-            for(int i =0 ;i < xNum; i++){
-               const bool bottom = i < (xNum/2);
-                for(int j =0 ;j < yNum; j++){
+            int k = yNum;
+            std::cout << "XNUM " << xNum << "\nYNUM : " << yNum <<std::endl;
+            for(int face = 0; face < 6; face++){
+            std::cout << "K : " << k << std::endl;
+                for(int x = 0; x < xNum -1; x++){
+                    k1 = (face*pow(xNum, 2)) + x*xNum +1;
+                    k2 = k + k1;
+                    
+                    for(int y = 0; y < yNum -1; y++, k1++, k2++){
+                        std::cout << "Y is : " << y << std::endl;
+                        int a = k1;
+                        int b = a -1;
+                        int c = k2;
+                        int d = c - 1;
 
-                    const bool left = j < (xNum/2);
-                    int a = (face*k +j) *k + i;
-                    int b = (face*k +j) * k + i + 1;
-                    int c = (face*k + j + 1) *k + i;
-                    int d = (face *k + j + 1)* k + i + 1;
-                    if(bottom ^ left){
-                        indices.push_back(a);
-                        indices.push_back(b);
-                        indices.push_back(d);
-                        indices.push_back(b);
-                        indices.push_back(c);
-                        indices.push_back(d);
-                    }else{
-                    indices.push_back(a);
-                    indices.push_back(b);
-                    indices.push_back(c);
-                    indices.push_back(a);
-                    indices.push_back(c);
-                    indices.push_back(d);
+                        std::cout << "\nk1 is : " << k1 << "\n\nk2 is: " << k2 << std::endl;
+
+                        addTriIndex(a, c, b);
+                        addTriIndex(c, d, b);                        
+
                     }
                 }
-            }
-            //else cubeSphere
         }
     }
 }
 
 
+void Sphere::multiplyVertex(double x, int index){
+        vertices[index] *= x;
+}
 
 
 void Sphere::attachMesh(){
@@ -208,7 +178,7 @@ void Sphere::attachMesh(){
         std::cerr << meshVAO << std::endl;
         glGenBuffers(1, &vertexBuffer);    
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0].x, GL_STATIC_DRAW);
         
         glGenBuffers(1, &normalBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
@@ -224,6 +194,8 @@ void Sphere::attachMesh(){
         glEnableVertexAttribArray(1);
 
 }
+
+
 
 void Sphere::print(){
     Mesh::print(true, true);

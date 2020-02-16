@@ -3,7 +3,7 @@
 
 in vec3 vPos;
 in vec3 vNormal;
-in vec3 eyeDir;
+in vec3 vEye;
 in vec3 eyeThree;
 out vec4 fragColour;
 
@@ -34,7 +34,7 @@ vec3 lighting(vec3 n, float ambientStrength, float specularStrength, float alpha
         ambient += ambientStrength*lights[i].colour.xyz;
         diff += max(dot(n, lightDir), 0.0);
         diffuse += diff*lights[i].colour.xyz;
-        spec += pow(max(dot(reflection, normalize(eyeDir)), 0.0), alpha);
+        spec += pow(max(dot(reflection, normalize(vEye)), 0.0), alpha);
         specular += specularStrength*spec*lights[i].colour.xyz;
     }
     return diffuse + ambient + specular;

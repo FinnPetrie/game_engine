@@ -6,22 +6,22 @@
 #include "Sphere.h"
 #include "Cube.h"
 #include "Quad.h"
-#include "Icosphere.h"
 #include "ShaderPipeline.h"
+#include "Planet.h"
 
 
 class Scene{
 
     private:
     std::vector<Mesh> scene;
-    std::vector<Cube> cubes;
     std::vector<Light> lights;
+    std::vector<Planet> planets;
     void generateLights(int count);
-    bool RAY_MARCH;
+    bool RAY_MARCH, DEBUG;
     public:
 
-        Scene();
-        Scene(bool RAY_MARCH);
+        Scene(bool DEBUG);
+        Scene(bool RAY_MARCH, bool DEBUG);
         void draw();
         
         std::vector<Light> getLights();

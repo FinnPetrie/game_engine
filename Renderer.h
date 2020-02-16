@@ -16,11 +16,12 @@ class Renderer{
     ShaderPipeline *shaders;
     Scene *scene;
     bool RAY_MARCH = false;
+    bool DEBUG = false;
     void createShaders();
 
     public:
     Renderer();
-    Renderer(int width, int height, bool rayMarch);
+    Renderer(int width, int height, bool rayMarch, bool DEBUG);
     void run();
     bool deleteRenderer();
 

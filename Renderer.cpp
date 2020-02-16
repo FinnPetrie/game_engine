@@ -9,7 +9,7 @@ Renderer::Renderer(){
     createShaders();
 }
 
-Renderer::Renderer(int width, int height, bool rayMarch) :  RAY_MARCH(rayMarch){
+Renderer::Renderer(int width, int height, bool rayMarch, bool DEBUG) :  RAY_MARCH(rayMarch), DEBUG(DEBUG){
     this->w = new Window(width, height);
     err = glewInit();
     createShaders();
@@ -21,20 +21,30 @@ void Renderer::createShaders(){
     std::vector<GLenum> types;
     if(!RAY_MARCH){
     paths.push_back("Shaders/shader.vert");
+    // paths.push_back("Shaders/shader.geom");
     paths.push_back("Shaders/shader.frag");
-    }else{
-        paths.push_back("Shaders/raymarch.vert");
-        paths.push_back("Shaders/raymarch.frag");
-    }
     types.push_back(GL_VERTEX_SHADER);
+    // types.push_back(GL_GEOMETRY_SHADER);
     types.push_back(GL_FRAGMENT_SHADER);
 
+    }else{
+        paths.push_back("Shaders/raymarch.vert");
+        paths.push_back("Shaders/raymarch_julia.frag");
+        types.push_back(GL_VERTEX_SHADER);
+        types.push_back(GL_FRAGMENT_SHADER);
+  
+    }
+
+     
+
+    
     this->shaders = new ShaderPipeline(paths, types);
 
 }
 void Renderer::run(){
 
     glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_PROGRAM_POINT_SIZE);  
 
     if(GLEW_OK != err){
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(err));
@@ -46,9 +56,9 @@ void Renderer::run(){
     //generate usual scene if not ray-marching, otherwise setup Quad so each pixel is given a fragment
 
     if(!RAY_MARCH){
-        scene = new Scene();
+        scene = new Scene(DEBUG);
     }else{
-        scene = new Scene(RAY_MARCH);
+        scene = new Scene(RAY_MARCH, DEBUG);
         std::cout << "Ray-Marching enabled" << std::endl;
     }
     

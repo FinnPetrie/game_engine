@@ -14,11 +14,12 @@ class Sphere : public Mesh{
         void genIndices(int longitude, int latitude);
         std::vector<float> buildUnitPositiveX(int subd);
     public:
-        Sphere(int subd, float r);
-        Sphere(int longitude, int latitude, float radius);
+        Sphere(int subd, float r, float step, bool d);
+        Sphere(int longitude, int latitude, float radius, bool d);
         void print();
         void attachMesh();
-
+        void multiplyVertex(double d, int index);
+        
 };
 
 #endif

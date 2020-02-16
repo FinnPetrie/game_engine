@@ -1,6 +1,6 @@
 #include "Quad.h"
 
-Quad::Quad(){
+Quad::Quad() : Mesh(true, false){
    GLfloat vertices[12] = {
       -1.0, -1.0, -1.0,
       -1.0, 1.0, -1.0,
@@ -11,7 +11,7 @@ Quad::Quad(){
     
 
     std::cerr << "Initialising RAY-QUAD" << std::endl;
-    Mesh::numVertices = 12;
+    this->numVertices = 12;
 
     glGenVertexArrays(1, &meshVAO);
     glBindVertexArray(meshVAO);

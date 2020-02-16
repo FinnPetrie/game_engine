@@ -93,19 +93,13 @@ void ShaderPipeline::sendLights(std::string name, std::vector<Light> lights){
     for(Light l : lights){
         std::string nPos= name +"[" + std::to_string(i) + "].pos";
         std::string nColour = name +"[" + std::to_string(i) + "].colour";
-        // l.print();
-        // std::cout << nPos << std::endl;
-        // std::cout << nColour << std::endl;
+        
         GLuint positionLocation = glGetUniformLocation(programID, nPos.c_str());
         GLuint colourLocation = glGetUniformLocation(programID, nColour.c_str());
-        // std::cerr << "positionLocation: " << positionLocation << std::endl;
-        // std::cerr << "colourLocation: " << colourLocation << std::endl;
-
+       
         glUniform3fv(positionLocation, 1, glm::value_ptr(l.getPosition()));
         glUniform4fv(colourLocation, 1, glm::value_ptr(l.getColour()));
-
         i+=1;
-    //     std::cout << "i " << i << std::endl;
     }
 
 }

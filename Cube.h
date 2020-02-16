@@ -7,6 +7,6 @@ class Cube: public Mesh{
         void draw();
 
     private:
-
+    
         void attachMesh(float *v);
 };

@@ -1,21 +1,23 @@
 #include "Scene.h"
 
-Scene::Scene(){
+Scene::Scene(bool DEBUG){
     // Mesh *m;
     // m = new Mesh();
     // scene.push_back(*m);
     // Cube *c;
     // c = new Cube();
     // scene.push_back(*c);
-    // Sphere *s = new Sphere(20, 20, 1);
-    Sphere *c = new Sphere(200, 200, 1);
+    // Sphere *s = new Sphere(40, 40, 1);
+    Sphere *c = new Sphere(5, 1.0f, 0.1f, DEBUG);
     scene.push_back(*c);
+    // Planet *p = new Planet(5, 45.0, 5, 4000);
+    // planets.push_back(*p);
     generateLights(2);
    
     
 }
 
-Scene::Scene(bool RAY_MARCH) : RAY_MARCH(RAY_MARCH){
+Scene::Scene(bool RAY_MARCH, bool DEBUG) : RAY_MARCH(RAY_MARCH), DEBUG(false){
     Quad *q = new Quad;
     scene.push_back(*q);
     Light l(glm::vec3(10.0, 10.0, -10.0), glm::vec4(0.5, 0.5, 0.3, 1.0));
@@ -46,6 +48,10 @@ void Scene::draw(){
 
     for(Mesh m : scene){
         m.draw();
+    }
+
+    for(Planet p : planets){
+        p.draw();
     }
    
 }

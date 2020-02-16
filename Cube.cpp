@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-Cube::Cube(){
+Cube::Cube() : Mesh(false, false){
 
     float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
