@@ -13,13 +13,17 @@ class Sphere : public Mesh{
         float radius;
         void genIndices(int longitude, int latitude);
         std::vector<float> buildUnitPositiveX(int subd);
+        int numIndices;
     public:
         Sphere(int subd, float r, float step, bool d);
         Sphere(int longitude, int latitude, float radius, bool d);
+        void remapVertices(std::vector<glm::vec3> verts);
+        void remapNormals(std::vector<glm::vec3> norms);
+
         void print();
         void attachMesh();
         void multiplyVertex(double d, int index);
-        
+        int getSizeIndices();
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "Quad.h"
 
-Quad::Quad() : Mesh(true, false){
+Quad::Quad() : Mesh(true){
    GLfloat vertices[12] = {
       -1.0, -1.0, -1.0,
       -1.0, 1.0, -1.0,
@@ -34,7 +34,7 @@ Quad::Quad() : Mesh(true, false){
 }
 
 void Quad::draw(){
-    // std::cout << "Drawing" << std::endl;
+    std::cout << "Drawing" << std::endl;
     Mesh::draw();
     
 

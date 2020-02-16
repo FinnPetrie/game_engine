@@ -8,9 +8,9 @@ Scene::Scene(bool DEBUG){
     // c = new Cube();
     // scene.push_back(*c);
     // Sphere *s = new Sphere(40, 40, 1);
-    Sphere *c = new Sphere(5, 1.0f, 0.1f, DEBUG);
+    Sphere *c = new Sphere(3, 1.0f, 0.1f, DEBUG);
     scene.push_back(*c);
-    // Planet *p = new Planet(5, 45.0, 5, 4000);
+    // Planet *p = new Planet(5, 45.0, 5, 4000, DEBUG);
     // planets.push_back(*p);
     generateLights(2);
    

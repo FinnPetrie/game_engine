@@ -11,10 +11,9 @@ class Planet{
         SimplexNoise *pearl;
     public:
 
-    Planet(int subd, double freq, size_t octaves, int seed);
+    Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG);
     void draw();
-    
-
+  
 };
 
 #endif

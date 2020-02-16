@@ -45,8 +45,9 @@ void Mesh::draw(){
 
         glBindVertexArray(meshVAO);
      
-
+        // std::cout << "In draw" << std::endl;
         if(RAY_MARCHING){
+            // std::cout << "In ray march " << std::endl;
        
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
@@ -58,15 +59,15 @@ void Mesh::draw(){
         }else{
 
             if(indices.size() > 0){
-            
+            // std::cout << "Drawing elements : " << std::endl;
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
             
-        }else{
-
-            glDrawArrays(GL_TRIANGLES, 0, numVertices);
-            
-            }
+            }else{
+                // std::cout << "Drawing tris" << std::endl;
+                glDrawArrays(GL_TRIANGLES, 0, numVertices);
+                
+                }
         }
 }
 
@@ -75,6 +76,7 @@ void Mesh::addTriIndex(GLuint i, GLuint j, GLuint k){
     indices.push_back(i);
     indices.push_back(j);
     indices.push_back(k);
+    std::cout << indices.size() << std::endl;
 }
 
 
@@ -99,28 +101,8 @@ void Mesh::setVertex(int index, glm::vec3 v){
 
 
 void Mesh::print(bool v, bool n){
-
-    // if(v){
-    // int length = vertices.size()/3;
-    // for(int i =0 ; i < length; i++){
-    //     for(int j = 0; j < 3; j++){
-    //         std::string element = "";
-    //         switch(j){
-    //             case 0:
-    //                 element = "X";
-    //                 break;
-    //             case 1:
-    //                 element = "Y";
-    //                 break;
-    //             case 2:
-    //                 element = "Z";
-    //                 break;
-    //             default:
-    //                 break;
-    //             }
-    //         std::cout << element << ": " << vertices[i+j] << std::endl;
-    //         }
-    //     }
-    // }
-    //removed normal printing
+    for(int i =0 ;i < vertices.size(); i++){
+        std::cout << i << "th vertex: " << glm::to_string(vertices[i]) << std::endl;
+    }
+   
 }

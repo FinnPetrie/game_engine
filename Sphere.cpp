@@ -43,40 +43,17 @@ Sphere::Sphere(int longitudeCount, int latitudeCount, float radius, bool DEBUG) 
 
 
 Sphere::Sphere(int subd, float radius, float step, bool DEBUG) : Mesh(false, DEBUG){
-    //sample +Z face
 
     cubeSphere = true;
-    int numIndices;
-    int x =0;
+    int x;
     
-    std::cout << "\n: X: " << x << std::endl;
     float stepSize = step/float(subd);
-    // glm::vec3 *p;
-    // for(float s = 0; s <= 1.0f; s +=stepSize){
-    //         x++;
-    //         // std::cout << "S Value : " << s << std::endl;
-    //         for(float t = 0; t <= 1.0f; t += stepSize){
-    //             // std::cout << "T Value : " << t << std::endl;
-              
-    //             p = new glm::vec3(1 - 2*s, 1-2*t, 1);
-                
-
-    //             glm::vec3 n = glm::normalize(*p);
-    //             normals.push_back(n);
-    //             n *= radius;
-    //             std::cout << "Value : " << glm::to_string(n) << std::endl;
-    //             vertices.push_back(n);
-    //             }
-    //         }
-
-
 
     for(int face = 0; face < 6; face++){
         glm::vec3 *p;
-        x = 0;
+        x =0;
         for(float s = 0; s <= 1.0f; s +=stepSize){
             x++;
-            // std::cout << "S Value : " << s << std::endl;
             for(float t = 0; t <= 1.0f; t += stepSize){
 
                 switch(face){
@@ -103,57 +80,60 @@ Sphere::Sphere(int subd, float radius, float step, bool DEBUG) : Mesh(false, DEB
                 glm::vec3 n = glm::normalize(*p);
                 normals.push_back(n);
                 n *= radius;
-                std::cout << "Value : " << glm::to_string(n) << std::endl;
                 vertices.push_back(n);
                 }
             }
     }
-    numIndices = x;
-    genIndices(numIndices, numIndices);
+    this->numIndices = x;
+    std::cout << "X : " << x << std::endl;
+    genIndices(x, x);
     attachMesh();
+    std::cout << "Size of indices : " << indices.size() << std::endl;
+    // std::cout << "Printing sphere : " << std::endl;
+    // print();
 }
 
-
+int Sphere::getSizeIndices(){
+    return numIndices;
+}
 void Sphere::genIndices(int xNum, int yNum){
     int k1, k2;
 
     if(!cubeSphere){
-    for(int i =0; i < xNum; i++){
-        k1 = i *(yNum + 1);
-        k2 = k1 + yNum + 1;
-        for(int j = 0; j < yNum; j++, k1++, k2++){
-            if (i != 0){
-                indices.push_back(k1);
-                indices.push_back(k2);
-                indices.push_back(k1 + 1);
-            }
+        for(int i =0; i < xNum; i++){
+            k1 = i *(yNum + 1);
+            k2 = k1 + yNum + 1;
+            for(int j = 0; j < yNum; j++, k1++, k2++){
+                if (i != 0){
+                    indices.push_back(k1);
+                    indices.push_back(k2);
+                    indices.push_back(k1 + 1);
+                }
 
-            if (i != (xNum - 1)){
-                indices.push_back(k1+1);
-                indices.push_back(k2);
-                indices.push_back(k2 + 1);
+                if (i != (xNum - 1)){
+                    indices.push_back(k1+1);
+                    indices.push_back(k2);
+                    indices.push_back(k2 + 1);
+                    }
                 }
             }
-        }
     }else{
 
+        std::cout << "Not cube sphere " << std::endl;
             int k = yNum;
-            std::cout << "XNUM " << xNum << "\nYNUM : " << yNum <<std::endl;
+            std::cout << "xNum " << xNum << std::endl;
             for(int face = 0; face < 6; face++){
-            std::cout << "K : " << k << std::endl;
                 for(int x = 0; x < xNum -1; x++){
                     k1 = (face*pow(xNum, 2)) + x*xNum +1;
                     k2 = k + k1;
-                    
+                    std::cout << "K1 : " << k1 << std::endl;
                     for(int y = 0; y < yNum -1; y++, k1++, k2++){
-                        std::cout << "Y is : " << y << std::endl;
                         int a = k1;
                         int b = a -1;
                         int c = k2;
                         int d = c - 1;
 
-                        std::cout << "\nk1 is : " << k1 << "\n\nk2 is: " << k2 << std::endl;
-
+                   
                         addTriIndex(a, c, b);
                         addTriIndex(c, d, b);                        
 
@@ -172,7 +152,7 @@ void Sphere::multiplyVertex(double x, int index){
 void Sphere::attachMesh(){
         numVertices = vertices.size();
         std::cout << "Attaching mesh " << std::endl;
-        std::cout << normals.size();
+        std::cout << normals.size() << std::endl;
         glGenVertexArrays(1, &meshVAO);
         glBindVertexArray(meshVAO);
         std::cerr << meshVAO << std::endl;
@@ -196,7 +176,21 @@ void Sphere::attachMesh(){
 }
 
 
+void Sphere::remapVertices(std::vector<glm::vec3> v){
+    vertices.clear();
+    for(int i =0 ; i < v.size(); i++){
+        vertices.push_back(v[i]);
 
+    }
+}
+
+void Sphere::remapNormals(std::vector<glm::vec3> n){
+    normals.clear();
+    for(int i =0 ; i < n.size(); i++){
+        normals.push_back(n[i]);
+
+    }
+}
 void Sphere::print(){
     Mesh::print(true, true);
 }

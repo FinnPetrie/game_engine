@@ -1,25 +1,37 @@
 #include "Planet.h"
 
-Planet::Planet(int subd, double freq, size_t octaves, int seed){
-    s = new Sphere(1, 1.0f, 0.5f, true);
+Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
+    s = new Sphere(4, 1.0f, 0.1f, DEBUG);
     pearl = new SimplexNoise();
     float noise;
-    
+    float scale = .007;
     std::vector<glm::vec3> oldVerts = s->getVertices();
-    for(int i =0 ; i < s->getVertices().size() -3; i+=3){
+    // s->print();
+    std::vector<glm::vec3> newVerts;
+    std::vector<glm::vec3> newNormals;
+    for(int i =0 ; i < s->getVertices().size(); i++){
         glm::vec3 v = s->getVertex(i);
-       noise = 12*pearl->fractal(octaves,v.x, v.y, v.z);
-    //    std::cout << noise << std::endl;
-       v *= noise;
-       s->setVertex(i, v);
-    }    
-    std::vector<glm::vec3> newVerts = s->getVertices();
-    s->attachMesh();
-    // for(int i =0 ; i < oldVerts.size() -3 ; i+=3){
-    //     std::cout << "Old X : " << oldVerts[i] << " New X : " << newVerts[i] << "\nOld Y : " << oldVerts[i+1]
-    //     << " New Y : " << newVerts[i+1] << "\nOld Z : " << oldVerts[i+2] << " New Z : " << newVerts[i+2] << std::endl;
-    // }
+        std::cout << "V was: " << glm::to_string(v) << std::endl;
+        noise = ((pearl->noise(v.x*scale, v.y*scale, v.z*scale) +1)*0.5);
+        std::cout << "Noise applied " << noise << std::endl;
+        v *= rand()%10;
+       
+        std::cout << "V is : " << glm::to_string(v) << std::endl;
+    //    glm::vec3 normal = glm::normalize(v);
+    //    s->setVertex(i, glm::vec3(0, 0, 0));
+        newVerts.push_back(v);
+        newNormals.push_back(glm::normalize(v));
+    }
+    // int num = s->getSizeIndices();
+   
+    // s->remapVertices(newVerts);
+    // s->remapNormals(newNormals);
+    // s->print();    
+    // s->genIndices();
+    // s->attachMesh();
+  
 }
+
 
 void Planet::draw(){
     s->draw();
