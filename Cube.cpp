@@ -2,71 +2,8 @@
 
 Cube::Cube(bool DEBUG, bool procedural) : Mesh(false, DEBUG), procedural(procedural){
 
-
-
-
-//      vertices = {
-//     glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f),
-//      glm::vec3(0.5f, -0.5f, -0.5f),  glm::vec3(0.0f,  0.0f, -1.0f), 
-//      glm::vec3(0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), 
-//      glm::vec3(0.5f,  0.5f, -0.5f),  glm::vec3(0.0f,  0.0f, -1.0f), 
-//     glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), 
-//    glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.0f,  0.0f, -1.0f), 
-
-//    glm::vec3( -0.5f, -0.5f,  0.5f),  glM::vec0.0f,  0.0f, 1.0f,
-//      0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-//      0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-//      0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-//     -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-//     -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-
-//     -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-//     -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-//     -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-//     -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-//     -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-//     -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
- 
-//      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-//      0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-//      0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-//      0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-//      0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-//      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-//     -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-//      0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-//      0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-//      0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-//     -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-//     -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-//     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-//      0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-//      0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-//      0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-//     -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-//     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-//     };
-
-    // glGenVertexArrays(1, &meshVAO);
-    // glGenBuffers(1, &vertexBuffer);
-
-    // glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // glBindVertexArray(meshVAO);
-
-    // // position attribute
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    // glEnableVertexAttribArray(0);
-    // // normal attribute
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
-    // Mesh::numVertices = 36;
-
     if(procedural){
-        proceduralCube(5, 0.1f);
+        proceduralCube(1, 0.5f);
     }
     attachMesh();
 }
@@ -74,13 +11,12 @@ Cube::Cube(bool DEBUG, bool procedural) : Mesh(false, DEBUG), procedural(procedu
 void Cube::proceduralCube(int subd, float step){
     float stepSize = step/float(subd);
     std::cout << "Step size: " << stepSize << std::endl;
-    int x, y;
-
+    int x, y =0;
+    glm::vec3 *p;
+    glm::vec3 *n;
 
     for(int face = 0; face < 6; face++){
-        glm::vec3 *p;
-        x =0;
-        glm::vec3 *n;
+        x = 0;
         for(float s = 0; s <= 1.0f; s +=stepSize){
             x++;
             y = 0;
@@ -113,14 +49,14 @@ void Cube::proceduralCube(int subd, float step){
                         break;
                 }
                 y += 1;
-
                 // *p += translation;
+                std::cout << "Adding normal" << std::endl;
                 addNormal(*n);
                 addVertex(*p);
                 }
             }
         }
-    print();
+    // print();
     std::cout << "X: " << x << "\nY: " << y << std::endl;
     this->numIndices = x;
 
@@ -224,8 +160,13 @@ void Cube::attachMesh(){
     }else{
 
         Mesh::attachMesh();
+        //vertex
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(0);
+
+        //normal
+        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(1);
 

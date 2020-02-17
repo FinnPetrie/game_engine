@@ -19,28 +19,24 @@ Renderer::Renderer(int width, int height, bool rayMarch, bool DEBUG) :  RAY_MARC
 void Renderer::createShaders(){
     std::vector<std::string> paths;
     std::vector<GLenum> types;
+    
     if(!RAY_MARCH){
-    paths.push_back("Shaders/shader.vert");
-    // paths.push_back("Shaders/shader.geom");
-    paths.push_back("Shaders/shader.frag");
-    types.push_back(GL_VERTEX_SHADER);
-    // types.push_back(GL_GEOMETRY_SHADER);
-    types.push_back(GL_FRAGMENT_SHADER);
-
+        paths.push_back("Shaders/shader.vert");
+        // paths.push_back("Shaders/shader.geom");
+        paths.push_back("Shaders/shader.frag");
+        types.push_back(GL_VERTEX_SHADER);
+        // types.push_back(GL_GEOMETRY_SHADER);
+        types.push_back(GL_FRAGMENT_SHADER);
     }else{
         paths.push_back("Shaders/raymarch.vert");
         paths.push_back("Shaders/raymarch_julia.frag");
         types.push_back(GL_VERTEX_SHADER);
         types.push_back(GL_FRAGMENT_SHADER);
-  
     }
 
-     
-
-    
     this->shaders = new ShaderPipeline(paths, types);
-
 }
+
 void Renderer::run(){
 
     glEnable(GL_COLOR_MATERIAL);
@@ -53,7 +49,7 @@ void Renderer::run(){
 
     glEnable(GL_DEPTH_TEST);
 
-    //generate usual scene if not ray-marching, otherwise setup Quad so each pixel is given a fragment
+    //generate usual scene if not ray-marching, otherwise setup Quad with size WIDTH*HEIGHT so each pixel gets a fragment 
 
     if(!RAY_MARCH){
         scene = new Scene(DEBUG);
@@ -64,7 +60,7 @@ void Renderer::run(){
     
     camera = new Camera(w);
 
-    while(!glfwWindowShouldClose(w->getWindow())){
+    while(!glfwWindowShouldClose(w->getWindow()) && (GLFW_KEY_ESCAPE != GLFW_PRESS)){
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwPollEvents();

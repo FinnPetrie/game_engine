@@ -3,19 +3,17 @@ Scene::Scene(bool DEBUG){
     // Mesh *m;
     // m = new Mesh();
     // scene.push_back(*m);
-    Cube *c;
-    c = new Cube(DEBUG, true);
-    scene.push_back(*c);
+    // Cube *c;
+    // c = new Cube(DEBUG, true);
+    // scene.push_back(*c);
     // Sphere *s = new Sphere(40, 40, 1);
     // Sphere *c = new Sphere(3, 1.0f, 0.1f, glm::vec3(10.0, 0, 0), DEBUG);
     // scene.push_back(*c);
-    // // Planet *p = new Planet(5, 45.0, 5, 4000, DEBUG);
-    // planets.push_back(*p);
+    Planet *p = new Planet(5, 45.0, 5, 4000, DEBUG);
+    planets.push_back(*p);
     // TerrainFace *t = new TerrainFace(5, DEBUG);
     // scene.push_back(*t);
     generateLights(2);
-   
-    
 }
 
 Scene::Scene(bool RAY_MARCH, bool DEBUG) : RAY_MARCH(RAY_MARCH), DEBUG(false){
@@ -29,17 +27,14 @@ std::vector<Light> Scene::getLights(){
     return lights;
 }
 
-
 void Scene::generateLights(int count){
     Light *l;
-    for(int i = 0; i < count; i++){
-       
+    for(int i = 0; i < count; i++){       
         l = new Light();
-        // l->print();
         lights.push_back(*l);
-
     }
 }
+
 void Scene::sendLights(ShaderPipeline *shaders){
     shaders->sendLights("lights", lights);
     shaders->sendInt("numLights", lights.size());

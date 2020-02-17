@@ -12,8 +12,10 @@ TerrainFace::TerrainFace(int subd, bool DEBUG): Mesh(false, DEBUG){
         y = 0;
         for(float t = 0; t < 1.0f; t+=step){
             // glm::vec3 v(1-2*s, 0, 1 - 2*t);
-            p = new glm::vec3(1 - 2*s, 0,  1-2*t);
+            p = new glm::vec3(1 - 2*s, -1,  1-2*t);
             glm::vec3 n(0, 1, 0);
+            // p->x*=2;
+            // // p->z*=2;
             addVertex(*p);
             addNormal(n);
             y += 1;
@@ -21,6 +23,7 @@ TerrainFace::TerrainFace(int subd, bool DEBUG): Mesh(false, DEBUG){
     }
     print();
     genIndices(x, y);
+    geoMorph();
     attachMesh();
 }
 
@@ -45,42 +48,28 @@ void TerrainFace::genIndices(int xNum, int yNum){
 }
 
 void TerrainFace::attachMesh(){
-        glGenVertexArrays(1, &meshVAO);
-        glBindVertexArray(meshVAO);
+    Mesh::attachMesh();
 
-        glGenBuffers(1, &vertexBuffer);    
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0].x, GL_STATIC_DRAW);
-
-        for(int i =0; i < vertices.size() ;i ++){
-            std::cout << glm::to_string(vertices[i]) << std::endl;
-        }
-        
-        glGenBuffers(1, &normalBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(glm::vec3), &normals[0].x, GL_STATIC_DRAW);
-
-        for(int i = 0; i < normals.size(); i++){
-            std::cout << glm::to_string(normals[i]) << std::endl;
-        }
-        std::cout << indices.size() << " = size of indices " << std::endl;
-
-        if(indices.size() > 0){
-            glGenBuffers(1, &indexBuffer);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-
-            for(int i =0 ; i < indices.size(); i++){
-                std::cout << indices[i] << std::endl;
-         }
-        }
-
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
-
+    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(1);
 
     std::cout << "Reached end of vertex enabling " << std::endl;
+}
+
+void TerrainFace::geoMorph(){
+    pearl = new SimplexNoise();
+    double noise;
+    float scale = 2;
+    for(int i =0; i < vertices.size(); i++){
+        glm::vec3 v = getVertex(i);
+        noise = ((pearl->noise(v.x*scale, v.z*scale) +1)*0.5);
+        v.y += noise;
+        setVertex(i, v);
+    }
+
 }

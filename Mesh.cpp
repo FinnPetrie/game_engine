@@ -5,10 +5,6 @@ Mesh::Mesh(bool r, bool DEBUG) : RAY_MARCHING(r), DEBUG(DEBUG){
   
 }
 
-
-
-
-
 void Mesh::attachMesh(){
 
         std::cout << "Attaching Mesh " << std::endl;
@@ -30,10 +26,6 @@ void Mesh::attachMesh(){
             glGenBuffers(1, &indexBuffer);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-
-            // for(int i =0 ; i < indices.size(); i++){
-            //     std::cout << indices[i] << std::endl;
-        //  }
         }
 }
 
@@ -56,28 +48,24 @@ void Mesh::calculateNormal(){
 void Mesh::draw(){
 
         glBindVertexArray(meshVAO);
-        // std::cout << "Drawing " << std::endl;
-        // std::cout << "In draw" << std::endl;
+       
+
         if(RAY_MARCHING){
-            // std::cout << "In ray march " << std::endl;
        
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
        
         }else if (DEBUG){
-            // std::cout << "DEBUGGING " << std::endl;
             glDrawArrays(GL_POINTS, 0, numVertices);
-       
         }else{
 
             if(indices.size() > 0){
-            // std::cout << "Drawing elements : " << std::endl;
-            // std::cout << "Should be drawing in this cunt loop " << std::endl;
+          
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
             
             }else{
-                // std::cout << "Drawing tris" << std::endl;
+
                 glDrawArrays(GL_TRIANGLES, 0, numVertices);
                 
                 }

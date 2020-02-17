@@ -91,16 +91,17 @@ void Sphere::cubeSphere(int subd, float radius, float step){
                 // *p += translation;
                 glm::vec3 n = glm::normalize(*p);
                 addNormal(n);
-                n *= radius;
-                n += *translation;
-                addVertex(*p);
+                glm::vec3 v(n);
+                v *= radius;
+                v += *translation;
+                addVertex(glm::vec3(v));
                 }
             }
         }
     this->numIndices = x;
 
     genIndices(x, x);
-    attachMesh();
+    // attachMesh();
 }
 
 void Sphere::reInit(std::vector<glm::vec3> verts, std::vector<glm::vec3> norms){
@@ -169,9 +170,11 @@ void Sphere::multiplyVertex(double x, int index){
 void Sphere::attachMesh() {
         Mesh::attachMesh();
        
-
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(1);
 
