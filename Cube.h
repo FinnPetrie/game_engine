@@ -3,10 +3,12 @@
 class Cube: public Mesh{
 
     public:
-        Cube();
-        void draw();
+        Cube(bool d, bool p);
 
     private:
-    
-        void attachMesh(float *v);
+        bool procedural;
+        unsigned int numIndices;
+        void genIndices(int  x, int y);
+        void proceduralCube(int subd, float steps);
+        void attachMesh();
 };

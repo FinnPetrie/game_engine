@@ -46,7 +46,7 @@ public:
     void addVertex(glm::vec3 v);
     void addNormal(glm::vec3 n);
     
-    void print(bool v, bool n);
+    void print();
     void test();
 };
 

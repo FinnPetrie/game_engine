@@ -8,6 +8,8 @@
 #include "Quad.h"
 #include "ShaderPipeline.h"
 #include "Planet.h"
+#include "TerrainFace.h"
+
 
 
 class Scene{

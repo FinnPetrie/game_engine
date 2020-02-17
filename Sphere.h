@@ -8,20 +8,24 @@ using VertexList = std::vector<glm::vec3>;
 class Sphere : public Mesh{
 
     private:
-    bool cubeSphere = false;
+    bool cSphere = false;
     std::vector<glm::vec3> triangleList;
         float radius;
         void genIndices(int longitude, int latitude);
         std::vector<float> buildUnitPositiveX(int subd);
         int numIndices;
+        glm::vec3 *translation;
+
+        void cubeSphere(int subd, float r, float step);
     public:
+
         Sphere(int subd, float r, float step, bool d);
         Sphere(int longitude, int latitude, float radius, bool d);
+        Sphere(int subd, float r, float step, glm::vec3 trans, bool d);
         void reInit(std::vector<glm::vec3> verts, std::vector<glm::vec3> norms);
         void remapVertices(std::vector<glm::vec3> verts);
         void remapNormals(std::vector<glm::vec3> norms);
 
-        void print();
         void attachMesh();
         void multiplyVertex(double d, int index);
         int getSizeIndices();
