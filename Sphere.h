@@ -17,6 +17,7 @@ class Sphere : public Mesh{
     public:
         Sphere(int subd, float r, float step, bool d);
         Sphere(int longitude, int latitude, float radius, bool d);
+        void reInit(std::vector<glm::vec3> verts, std::vector<glm::vec3> norms);
         void remapVertices(std::vector<glm::vec3> verts);
         void remapNormals(std::vector<glm::vec3> norms);
 

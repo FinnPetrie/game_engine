@@ -15,7 +15,7 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
         noise = ((pearl->noise(v.x*scale, v.y*scale, v.z*scale) +1)*0.5);
         std::cout << "Noise applied " << noise << std::endl;
         v *= rand()%10;
-       
+    //    v *= noise;
         std::cout << "V is : " << glm::to_string(v) << std::endl;
     //    glm::vec3 normal = glm::normalize(v);
     //    s->setVertex(i, glm::vec3(0, 0, 0));
@@ -23,12 +23,12 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
         newNormals.push_back(glm::normalize(v));
     }
     // int num = s->getSizeIndices();
-   
+    s->reInit(newVerts, newNormals);
     // s->remapVertices(newVerts);
     // s->remapNormals(newNormals);
     // s->print();    
-    // s->genIndices();
-    // s->attachMesh();
+    
+    s->attachMesh();
   
 }
 

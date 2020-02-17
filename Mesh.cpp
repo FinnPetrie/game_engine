@@ -23,6 +23,12 @@ void Mesh::attachMesh(){
         glGenBuffers(1, &normalBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
         glBufferData(GL_ARRAY_BUFFER, normals.size()*sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+
+        if(indices.size() > 0){
+            glGenBuffers(1, &indexBuffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+        }
 }
 
 
@@ -79,6 +85,14 @@ void Mesh::addTriIndex(GLuint i, GLuint j, GLuint k){
     std::cout << indices.size() << std::endl;
 }
 
+void Mesh::addVertex(glm::vec3 v){
+    vertices.push_back(v);
+}
+
+
+void Mesh::addNormal(glm::vec3 n){
+    normals.push_back(n);
+}
 
 void Mesh::addVertex(GLfloat x, GLfloat y, GLfloat z){
     glm::vec3 v(x, y, z);

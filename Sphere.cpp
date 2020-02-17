@@ -85,12 +85,19 @@ Sphere::Sphere(int subd, float radius, float step, bool DEBUG) : Mesh(false, DEB
             }
     }
     this->numIndices = x;
-    std::cout << "X : " << x << std::endl;
+    std::cout << "X : " << numIndices << std::endl;
     genIndices(x, x);
     attachMesh();
     std::cout << "Size of indices : " << indices.size() << std::endl;
     // std::cout << "Printing sphere : " << std::endl;
     // print();
+}
+
+void Sphere::reInit(std::vector<glm::vec3> verts, std::vector<glm::vec3> norms){
+    remapVertices(verts);
+    remapNormals(norms);
+    indices.clear();
+    genIndices(numIndices, numIndices);
 }
 
 int Sphere::getSizeIndices(){
@@ -149,24 +156,25 @@ void Sphere::multiplyVertex(double x, int index){
 }
 
 
-void Sphere::attachMesh(){
-        numVertices = vertices.size();
-        std::cout << "Attaching mesh " << std::endl;
-        std::cout << normals.size() << std::endl;
-        glGenVertexArrays(1, &meshVAO);
-        glBindVertexArray(meshVAO);
-        std::cerr << meshVAO << std::endl;
-        glGenBuffers(1, &vertexBuffer);    
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0].x, GL_STATIC_DRAW);
+void Sphere::attachMesh() {
+        Mesh::attachMesh();
+        // numVertices = vertices.size();
+        // std::cout << "Attaching mesh " << std::endl;
+        // std::cout << normals.size() << std::endl;
+        // glGenVertexArrays(1, &meshVAO);
+        // glBindVertexArray(meshVAO);
+        // std::cerr << meshVAO << std::endl;
+        // glGenBuffers(1, &vertexBuffer);    
+        // glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        // glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0].x, GL_STATIC_DRAW);
         
-        glGenBuffers(1, &normalBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        glBufferData(GL_ARRAY_BUFFER, Mesh::normals.size() * sizeof(glm::vec3), &normals[0].x, GL_STATIC_DRAW);
+        // glGenBuffers(1, &normalBuffer);
+        // glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+        // glBufferData(GL_ARRAY_BUFFER, Mesh::normals.size() * sizeof(glm::vec3), &normals[0].x, GL_STATIC_DRAW);
 
-        glGenBuffers(1, &indexBuffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+        // glGenBuffers(1, &indexBuffer);
+        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(0);

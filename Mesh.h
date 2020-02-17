@@ -33,14 +33,18 @@ public:
     virtual void attachMesh();
 
     std::vector<glm::vec3> getVertices();
+    
+    //setters/getters
     glm::vec3 getVertex(int index);
     void setVertex(int index, glm::vec3);
 
     void bindMesh();
     void random();
+
     void addTriIndex(GLuint i, GLuint j, GLuint k);
     void addVertex(GLfloat x, GLfloat y, GLfloat z);
-
+    void addVertex(glm::vec3 v);
+    void addNormal(glm::vec3 n);
     
     void print(bool v, bool n);
     void test();
