@@ -13,7 +13,7 @@ uniform vec4 eye;
 // } vs_out;
 
 out vec3 vPos;
-out vec3 vNormal;
+ out vec3 vNormal;
 out vec3 eyeDir;
 
 void main(){

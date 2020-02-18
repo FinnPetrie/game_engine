@@ -2,18 +2,41 @@
 #define MESH_H_
 #include "utils.h"
 #include <vector>
+#include <algorithm>
+struct Half_Edge;
+struct Face;
+
+struct Vertex{
+    glm::vec3 *v;
+    Half_Edge *edge;
+};
+
+struct Half_Edge{
+    Vertex *vert;
+    Half_Edge *pair;
+    Face *face;
+    Half_Edge *next;
+};
+
+
+struct Face{
+    Half_Edge *edge;
+};
 
 class Mesh{
 
+
 protected:
+
 //change this to vec3s sooner or later
     std::vector<glm::vec3> vertices;
-   
+    
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
 
     bool RAY_MARCHING = false;
     bool DEBUG = false;
+
     glm::vec3 colour;
     GLuint meshVAO;
     GLuint vertexBuffer;
@@ -22,8 +45,11 @@ protected:
     GLuint indexBuffer;
     int numVertices;
 
-    
-    void calculateNormal();
+    std::vector<glm::vec3> sortVertices(glm::vec3 a, glm::vec3 b, glm::vec3 c);
+
+    virtual void createFaces();
+    double computeVertexCentroid();
+
 
 public:
     
@@ -33,7 +59,8 @@ public:
     virtual void attachMesh();
 
     std::vector<glm::vec3> getVertices();
-    
+    void calculateNormals();
+
     //setters/getters
     glm::vec3 getVertex(int index);
     void setVertex(int index, glm::vec3);
@@ -46,6 +73,8 @@ public:
     void addVertex(glm::vec3 v);
     void addNormal(glm::vec3 n);
     
+    bool vertexLesserComp(glm::vec3 a, glm::vec3 b);
+
     void print();
     void test();
 };

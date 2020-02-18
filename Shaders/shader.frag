@@ -14,10 +14,12 @@ struct Light{
     vec4 colour;
 };
 
+
 uniform Light lights[10];
 uniform vec3 objectColour;
 
-
+const vec3 light = vec3(10, 10, 10);
+const vec3 lColour = vec3(0.5, 0.5, 0.2);
 
 vec3 lighting(vec3 n, float ambientStrength, float specularStrength, float alpha){
     
@@ -37,6 +39,27 @@ vec3 lighting(vec3 n, float ambientStrength, float specularStrength, float alpha
         spec += pow(max(dot(reflection, normalize(vEye)), 0.0), alpha);
         specular += specularStrength*spec*lights[i].colour.xyz;
     }
+    return diffuse + ambient + specular;
+}
+
+
+vec3 testLight(vec3 n, float ambientStrength, float specularStrength, float alpha){
+    
+    float diff = 0;
+    vec3 ambient = vec3(0,0,0);
+    vec3 diffuse = vec3(0,0,0);
+    vec3 specular = vec3(0,0,0);
+    float spec = 0;
+
+        vec3 lightDir = normalize(light - vPos);
+        vec3 reflection = reflect(n, lightDir);
+
+        ambient += ambientStrength*lColour;
+        diff += max(dot(n, lightDir), 0.0);
+        diffuse += diff*lColour;
+        spec += pow(max(dot(reflection, normalize(vEye)), 0.0), alpha);
+        specular += specularStrength*spec*lColour;
+    
     return diffuse + ambient + specular;
 }
 

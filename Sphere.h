@@ -9,12 +9,16 @@ class Sphere : public Mesh{
 
     private:
     bool cSphere = false;
-    std::vector<glm::vec3> triangleList;
+    
+        std::vector<glm::vec3> triangleList;
         float radius;
         void genIndices(int longitude, int latitude);
         std::vector<float> buildUnitPositiveX(int subd);
         int numIndices;
         glm::vec3 *translation;
+
+
+        void createFaces();
 
         void cubeSphere(int subd, float r, float step);
     public:

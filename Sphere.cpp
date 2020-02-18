@@ -166,10 +166,10 @@ void Sphere::multiplyVertex(double x, int index){
         vertices[index] *= x;
 }
 
-
 void Sphere::attachMesh() {
         Mesh::attachMesh();
-       
+
+        numVertices = vertices.size();
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(0);
@@ -194,3 +194,12 @@ void Sphere::remapNormals(std::vector<glm::vec3> n){
     }
 }
 
+void Sphere::createFaces(){
+    for(int i = 0; i < indices.size(); i+=3){
+        glm::vec3 a = vertices[indices[i]];
+        glm::vec3 b = vertices[indices[i + 1]];
+        glm::vec3 c = vertices[indices[i + 2]];
+
+        std::vector<glm::vec3> sorted = sortVertices(a, b, c);
+    }
+}

@@ -11,4 +11,6 @@ class Cube: public Mesh{
         void genIndices(int  x, int y);
         void proceduralCube(int subd, float steps);
         void attachMesh();
+
+        void createFaces();
 };

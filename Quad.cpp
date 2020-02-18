@@ -21,11 +21,12 @@ Quad::Quad() : Mesh(true, false){
 void Quad::attachMesh(){
 
     Mesh::attachMesh();
-    
+    numVertices = vertices.size();
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
 }
+
 void Quad::draw(){
     std::cout << "Drawing" << std::endl;
     Mesh::draw();

@@ -8,4 +8,6 @@ class Quad: public Mesh{
         Quad();
         void draw();
         void attachMesh();
+
+        void createFaces();
 };

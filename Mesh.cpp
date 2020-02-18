@@ -30,19 +30,43 @@ void Mesh::attachMesh(){
 }
 
 
-void Mesh::calculateNormal(){
-    glm::vec3 p2(vertices[0]);
-    glm::vec3 p1(vertices[1]);
-    glm::vec3 p3(vertices[2]);
-    glm::vec3 U = (p2 -p1);
-    glm::vec3 V = (p3 - p1);
+void Mesh::calculateNormals(){
+    normals.clear();
+    std::cout << "Sise of Norms : " <<normals.size() << std::endl;
+    for(int i =0 ;i < indices.size(); i += 3){
+        
+        glm::vec3 a = vertices[indices[i]];
+        glm::vec3 b = vertices[indices[i + 1]];
+        glm::vec3 c = vertices[indices[i + 2]];
 
-    glm::vec3 normal = glm::normalize(glm::cross(U, V));
+        glm::vec3 edge1 = b -a;
+        glm::vec3 edge2 = b -c;
+        
+        glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
 
-    normals.push_back(normal);
+        normals.push_back(normal);
+        normals.push_back(normal);
+        normals.push_back(normal);
+    }
+
+    std::cout << "Sizse of norms : " << normals.size() << std::endl;
+    std::cout << "index 2 : " << indices[1];
+
+
+    std::cout << glm::to_string(vertices[indices[0]]) << std::endl;
+    std::cout << glm::to_string(vertices[indices[1]]) << std::endl;
+    std::cout << glm::to_string(vertices[indices[2]]) << std::endl;
 }
 
+std::vector<glm::vec3> sortVertices(std::vector<glm::vec3> verts){
+    std::sort(verts.begin(), verts.end(), Mesh::vertexLesserComp);
+    
+}
 
+//todo 
+bool Mesh::vertexLesserComp(glm::vec3 a, glm::vec3 b){
+    
+}
 
 //note to self, higher classes aren't getting their draw functions called
 void Mesh::draw(){
