@@ -4,7 +4,6 @@
 #include "Mesh.h"
 #include "utils.h"
 
-using VertexList = std::vector<glm::vec3>;
 class Sphere : public Mesh{
 
     private:

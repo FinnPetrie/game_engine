@@ -24,8 +24,9 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
     // s->remapNormals(newNormals);
     // s->print();    
     // s->calculateNormals();
+
     s->attachMesh();
-  
+    // s->createFaces();
 }
 
 

@@ -30,6 +30,8 @@ void Quad::attachMesh(){
 void Quad::draw(){
     std::cout << "Drawing" << std::endl;
     Mesh::draw();
-    
+}
+
+void Quad::createFaces(){
 
 }

@@ -3,6 +3,7 @@
 #include "utils.h"
 #include <vector>
 #include <algorithm>
+
 struct Half_Edge;
 struct Face;
 
@@ -30,14 +31,15 @@ protected:
 
 //change this to vec3s sooner or later
     std::vector<glm::vec3> vertices;
-    
+    glm::vec3 colour;
+
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
 
     bool RAY_MARCHING = false;
     bool DEBUG = false;
 
-    glm::vec3 colour;
+    
     GLuint meshVAO;
     GLuint vertexBuffer;
     GLuint normalBuffer;
@@ -45,10 +47,8 @@ protected:
     GLuint indexBuffer;
     int numVertices;
 
-    std::vector<glm::vec3> sortVertices(glm::vec3 a, glm::vec3 b, glm::vec3 c);
 
     virtual void createFaces();
-    double computeVertexCentroid();
 
 
 public:
@@ -57,6 +57,7 @@ public:
     Mesh(bool DEBUG);
     virtual void draw();
     virtual void attachMesh();
+    void sortVertices(std::vector<glm::vec3> &verts);
 
     std::vector<glm::vec3> getVertices();
     void calculateNormals();
@@ -73,7 +74,7 @@ public:
     void addVertex(glm::vec3 v);
     void addNormal(glm::vec3 n);
     
-    bool vertexLesserComp(glm::vec3 a, glm::vec3 b);
+    // bool vertexLesserComp(glm::vec3 &a, glm::vec3 &b);
 
     void print();
     void test();

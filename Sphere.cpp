@@ -178,6 +178,8 @@ void Sphere::attachMesh() {
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         glEnableVertexAttribArray(1);
 
+        createFaces();
+
 }
 
 void Sphere::remapVertices(std::vector<glm::vec3> v){
@@ -200,6 +202,15 @@ void Sphere::createFaces(){
         glm::vec3 b = vertices[indices[i + 1]];
         glm::vec3 c = vertices[indices[i + 2]];
 
-        std::vector<glm::vec3> sorted = sortVertices(a, b, c);
+        std::vector<glm::vec3> toSort = {a, b, c};
+        for(int i =0 ;i < toSort.size(); i++){
+            std::cout << "From: " << glm::to_string(toSort[i]) << std::endl;
+        }
+        sortVertices(toSort);
+
+        for(int i =0 ; i < toSort.size(); i++){
+            std::cout << "To : " << glm::to_string(toSort[i]) << std::endl;
+        }
+        
     }
 }

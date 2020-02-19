@@ -58,15 +58,24 @@ void Mesh::calculateNormals(){
     std::cout << glm::to_string(vertices[indices[2]]) << std::endl;
 }
 
-std::vector<glm::vec3> sortVertices(std::vector<glm::vec3> verts){
-    std::sort(verts.begin(), verts.end(), Mesh::vertexLesserComp);
-    
+void Mesh::sortVertices(std::vector<glm::vec3> &verts){
+    //may have to compare by absolute value
+    std::sort(verts.begin(), verts.end(), [](glm::vec3 & a, glm::vec3 & b){
+        if(a.x < b.x){
+            return true;
+        }else if(a.x == b.x){
+            if(a.y < b.y){
+                return true;
+            }else if(a.y == b.y){
+                if(a.z < b.z){
+                    return true;
+                }
+        }
+    }
+    return false;
+    });   
 }
 
-//todo 
-bool Mesh::vertexLesserComp(glm::vec3 a, glm::vec3 b){
-    
-}
 
 //note to self, higher classes aren't getting their draw functions called
 void Mesh::draw(){
@@ -131,6 +140,11 @@ std::vector<glm::vec3> Mesh::getVertices(){
 void Mesh::setVertex(int index, glm::vec3 v){
     vertices[index] = v;
   
+}
+
+void Mesh::createFaces(){
+
+
 }
 
 

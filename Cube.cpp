@@ -174,3 +174,7 @@ void Cube::attachMesh(){
     }
 }
 
+
+void Cube::createFaces(){
+
+}
