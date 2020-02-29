@@ -40,12 +40,13 @@ void Mesh::calcVertexNormals(){
 
   std::cout << " CALC " << std::endl;
 
-  normals.clear();
+//   normals.clear();
   for(Face *f : faceList){
       for(Vertex *v : f->verts){
-        normals.push_back(glm::normalize(*v->n));
+        normals[v->index] = glm::vec3((glm::normalize(*v->n)));
      }
     }
+    
 }
 
 // void Mesh::calcHalfEdgeNormals(){
@@ -205,7 +206,7 @@ void Mesh::createHalfEdges(){
     Mesh::calculateFaceNormals();
     std::cout << "Vertex : norms : "<< std::endl;
     Mesh::calcVertexNormals();
-    Mesh::reassignVertices();
+    // Mesh::reassigsnVertices();
     //currently the next thing 
     // Mesh::calcHalfEdgeNormals();
     }
@@ -265,7 +266,7 @@ void Mesh::draw(){
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
             
             }else{
-
+                // std::cout << numVertices << std::endl;
                 glDrawArrays(GL_TRIANGLES, 0, numVertices);
                 
                 }

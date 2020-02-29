@@ -66,7 +66,7 @@ vec3 testLight(vec3 n, float ambientStrength, float specularStrength, float alph
 
 void main(){
     vec3 normal = normalize(vNormal);
-    vec3 lightLevel = lighting(normal, 0.5, 1.5, 32);
+    vec3 lightLevel = testLight(normal, 0.5, 1.5, 32);
 
     vec3 objectColour = vec3(0.5, 0.2, 0.78);
 
