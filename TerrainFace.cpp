@@ -48,6 +48,7 @@ void TerrainFace::genIndices(int xNum, int yNum){
 }
 
 void TerrainFace::attachMesh(){
+    Mesh::createFaces();
     Mesh::attachMesh();
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);

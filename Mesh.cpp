@@ -47,6 +47,35 @@ void Mesh::calcVertexNormals(){
   }
 
 }
+
+void Mesh::calcHalfEdgeNormals(){
+    normals.clear();
+    for(Vertex *v : vertexList){
+        Half_Edge *n_E = v->edge;
+        std::cout << "Fine " << std::endl;
+       
+        std::cout << "After n Fine " << std::endl;
+
+        *v->n += n_E->face->normal;
+        std::cout << "Added to n " << std::endl;
+
+        n_E = n_E->pair->next;
+        while(n_E != v->edge){
+            std::cout << "navigating graph " << std::endl;
+            // n_E->face->calcNormal();
+            *v->n += n_E->face->normal;
+            std::cout << "Current value of vertex norm " << glm::to_string(*v->n) << std::endl;
+            n_E = n_E->pair->next;
+        }
+        std::cout << "Out " << std::endl;
+        *v->n = normalize(*v->n);
+        normals.push_back(*v->n);
+    }
+
+
+}
+
+
 void Mesh::calculateNormals(){
     normals.clear();
     std::cout << "Sise of Norms : " <<normals.size() << std::endl;
@@ -75,7 +104,93 @@ void Mesh::calculateNormals(){
     std::cout << glm::to_string(vertices[indices[2]]) << std::endl;
 }
 
+void Mesh::createFaces(){
+  // std::vector<Face> faces;
+    Face *f;
+    for(int i = 0; i < indices.size(); i+=3){
+        f = new Face();
+        glm::vec3 a = vertices[indices[i]];
+        glm::vec3 b = vertices[indices[i + 1]];
+        glm::vec3 c = vertices[indices[i + 2]];
 
+        std::vector<glm::vec3> toSort = {a, b, c};
+        for(int i =0 ;i < toSort.size(); i++){
+            // std::cout << "From: " << glm::to_string(toSort[i]) << std::endl;
+        }
+        sortVertices(toSort);
+        f->indices = {indices[i], indices[i + 1], indices[i+2]};
+        f->verts = std::vector<glm::vec3>{toSort[0],toSort[1],toSort[2]};
+        for(int i =0 ; i < toSort.size(); i++){
+            // std::cout << "To : " << glm::to_string(toSort[i]) << std::endl;
+        }
+        faceList.push_back(f);
+    }
+
+
+    // std::map<std::pair<unsigned int, unsigned int>, Half_Edge*> Edges; 
+    // for(Face F : faces){
+    //     std::cout << F.indices[0] << "\n" << F.indices[1] << "\n" << F.indices[2] << std::endl;
+    // }
+    std::ofstream pairs;
+    pairs.open("Pairs.txt");
+    // faceList = &faces;
+    for(Face *F : faceList){
+                std::cout << "\n " << F->indices[0] << "\t" << F->indices[1] << "\t" << F->indices[2] << std::endl;
+
+        std::pair<unsigned int, unsigned int> *edgePair;
+        std::pair<unsigned int, unsigned int> *nextEdge;
+        std::pair<unsigned int, unsigned int> *oppositeEdge;
+
+        Vertex *vertex;
+        //for each edge pair
+        for(int i =0 ; i < 3; i++){
+            edgePair = new std::pair<unsigned int, unsigned int>(F->indices[i], F->indices[(i+1)%3]);
+            // std::cout << "Edge pair: " << f->indices[i] << "\n" << f->indices[i+1] %3 << std::endl;
+            // std::cout << i << "\n" << (i + 1)%3 << std::endl;
+            pairs << F->indices[i] << "\n" << F->indices[(i+1)%3] <<std::endl;
+            vertex = new Vertex();
+            vertex->v = new glm::vec3(F->verts[i]);
+            std::cout << glm::to_string(*vertex->v) << std::endl;
+            vertex->n = new glm::vec3(0, 0, 0);
+            switch(i){
+                case 0:
+                    F->v1 = vertex;
+                    break;
+                case 1:
+                    F->v2 = vertex;
+                    break;
+                case 2:
+                    F->v3 = vertex;
+                    break;
+            }
+            
+            Edges[*edgePair] = new Half_Edge();
+            Edges[*edgePair]->face = F;
+            Edges[*edgePair]->vert = vertex;
+            vertex->edge = Edges[*edgePair];
+            vertexList.push_back(vertex);
+        } 
+        
+        for(int i =0 ; i < 3; i++){
+            edgePair = new std::pair<unsigned int, unsigned int>(F->indices[i], F->indices[(i+1)%3]);
+            nextEdge = new std::pair<unsigned int, unsigned int>(F->indices[(i+1)%3], F->indices[(i+2)%3]);
+            oppositeEdge = new std::pair<unsigned int, unsigned int>(F->indices[(i+1)%3], F->indices[i]);
+
+            Edges[*edgePair]->next = Edges[*nextEdge];
+            if(Edges.find(*oppositeEdge) != Edges.end()){
+                    Edges[*edgePair]->pair = Edges[*oppositeEdge];
+                    Edges[*oppositeEdge]->pair = Edges[*edgePair];
+            }
+        }
+    }
+    pairs.close();
+    Mesh::calculateFaceNormals();
+    Mesh::calcVertexNormals();
+    //currently the next thing 
+    // Mesh::calcHalfEdgeNormals();
+    }
+
+    
 void Mesh::calculateFaceNormals(){
     for(Face *f : faceList){
         // std::cout << f->v2->v << std::endl;;
@@ -171,10 +286,7 @@ void Mesh::setVertex(int index, glm::vec3 v){
   
 }
 
-void Mesh::createFaces(){
 
-
-}
 
 
 void Mesh::print(){

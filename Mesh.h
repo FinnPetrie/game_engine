@@ -33,6 +33,17 @@ struct Face{
     std::vector<glm::vec3> verts;
     std::vector<unsigned int> indices;
     glm::vec3 normal;
+
+    // void calcNormal(){
+    //     normal = glm::vec3(0,)
+    //     Vertex *v = edge->vert;
+    //     Vertex *vx = edge->next->vert;
+    //     Vertex *vy = edge->next->next->vert;
+    //     glm::vec3 e1 = *vx->v - *v->v;
+    //     glm::vec3 e2 = *vx->v - *vy->v;
+
+    //     this->normal = glm::cross(e1, e2);
+    // }
 };
 
 class Mesh{
@@ -44,7 +55,8 @@ protected:
     std::vector<glm::vec3> vertices;
     std::vector<Face *> faceList;
     glm::vec3 colour;
-
+    void calcHalfEdgeNormals();
+    glm::vec3 faceNormal(Half_Edge *n);
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
 

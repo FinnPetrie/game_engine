@@ -1,9 +1,8 @@
 Design:
 
 TODO:
-implement vertex sorting in mesh object.
-Get Half Edges working 
-Calculate normals for each vertex
+So half edges are working - I believe, however --
+Calculate normals for each vertex -- this does not work, so? Find out why!
 See what happens, Mmm yeah.
 
 --Then onto getting a decent noise generation
