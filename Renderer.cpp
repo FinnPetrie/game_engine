@@ -9,7 +9,7 @@ Renderer::Renderer(){
     createShaders();
 }
 
-Renderer::Renderer(int width, int height, bool rayMarch, bool DEBUG) :  RAY_MARCH(rayMarch), DEBUG(DEBUG){
+Renderer::Renderer(int width, int height, bool rayMarch, bool DEBUG, bool NORMALS) :  RAY_MARCH(rayMarch), DEBUG(DEBUG), NORMALS(NORMALS){
     this->w = new Window(width, height);
     err = glewInit();
     createShaders();
@@ -21,25 +21,27 @@ void Renderer::createShaders(){
     std::vector<GLenum> types;
     
     if(!RAY_MARCH){
-        paths.push_back("Shaders/shader.vert");
+        paths.push_back("Shaders/Raster/shader.vert");
         // paths.push_back("Shaders/shader.geom");
-        paths.push_back("Shaders/shader.frag");
+        paths.push_back("Shaders/Raster/shader.frag");
         types.push_back(GL_VERTEX_SHADER);
         // types.push_back(GL_GEOMETRY_SHADER);
         types.push_back(GL_FRAGMENT_SHADER);
     }else{
-        paths.push_back("Shaders/raymarch.vert");
-        paths.push_back("Shaders/raymarch_julia.frag");
+        paths.push_back("Shaders/Ray_March/raymarch.vert");
+        paths.push_back("Shaders/Ray_March/raymarch_julia.frag");
         types.push_back(GL_VERTEX_SHADER);
         types.push_back(GL_FRAGMENT_SHADER);
     }
     ShaderPipeline *shaders;
     shaders = new ShaderPipeline(paths, types);
     shades.push_back(shaders);
+
+    if(NORMALS){
     std::vector<std::string> geomPaths;
-    geomPaths.push_back("Shaders/geoShader.vert");
-    geomPaths.push_back("Shaders/shader.geom");
-    geomPaths.push_back("Shaders/geoFrag.frag");
+    geomPaths.push_back("Shaders/Normals/geoShader.vert");
+    geomPaths.push_back("Shaders/Normals/shader.geom");
+    geomPaths.push_back("Shaders/Normals/geoFrag.frag");
 
     std::vector<GLenum> geoTypes;
     geoTypes.push_back(GL_VERTEX_SHADER);
@@ -48,6 +50,7 @@ void Renderer::createShaders(){
     shaders = new ShaderPipeline(geomPaths, geoTypes);
     std::cout << "All compiled " << std::endl;
     shades.push_back(shaders);
+    }
 }
 
 void Renderer::run(){
@@ -67,8 +70,9 @@ void Renderer::run(){
 
     if(!RAY_MARCH){
         scene = new Scene(DEBUG);
+        if(NORMALS){
         normalShader = shades[1];
-
+    }
     }else{
         scene = new Scene(RAY_MARCH, DEBUG);
         std::cout << "Ray-Marching enabled" << std::endl;
@@ -105,7 +109,7 @@ void Renderer::run(){
         scene->sendLights(shaders);
         scene->draw();
         //-------------------
-        if(!RAY_MARCH){
+        if(NORMALS && !RAY_MARCH){
         normalShader->use();
         normalShader->modelViewProjection(camera);
         scene->draw();

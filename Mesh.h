@@ -11,6 +11,7 @@ struct Vertex{
     glm::vec3 *v;
     Half_Edge *edge;
     glm::vec3 *n;
+    unsigned int index;
 };
 
 struct Half_Edge{
@@ -27,11 +28,9 @@ struct Half_Edge{
 
 struct Face{
     Half_Edge *edge;
-    Vertex *v1;
-    Vertex *v2;
-    Vertex *v3;
-    std::vector<glm::vec3> verts;
-    std::vector<unsigned int> indices;
+
+    std::vector<Vertex *> verts;
+    // std::vector<unsigned int> indices;
     glm::vec3 normal;
 
     // void calcNormal(){
@@ -57,6 +56,10 @@ protected:
     glm::vec3 colour;
     void calcHalfEdgeNormals();
     glm::vec3 faceNormal(Half_Edge *n);
+    void reassignVertices();
+
+    void createHalfEdges();
+    
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
 
@@ -83,7 +86,7 @@ public:
     Mesh(bool DEBUG);
     virtual void draw();
     virtual void attachMesh();
-    void sortVertices(std::vector<glm::vec3> &verts);
+    void sortVertices(std::vector<Vertex *> &verts);
     void printNormals();
     std::vector<glm::vec3> getVertices();
     void calculateNormals();

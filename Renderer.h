@@ -16,12 +16,13 @@ class Renderer{
    std::vector<ShaderPipeline *> shades;
     Scene *scene;
     bool RAY_MARCH = false;
+    bool NORMALS = false;
     bool DEBUG = false;
     void createShaders();
 
     public:
     Renderer();
-    Renderer(int width, int height, bool rayMarch, bool DEBUG);
+    Renderer(int width, int height, bool rayMarch, bool DEBUG, bool NORMALS);
     void run();
     bool deleteRenderer();
 
