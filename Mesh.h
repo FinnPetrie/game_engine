@@ -10,6 +10,7 @@ struct Face;
 struct Vertex{
     glm::vec3 *v;
     Half_Edge *edge;
+    glm::vec3 *n;
 };
 
 struct Half_Edge{
@@ -17,11 +18,21 @@ struct Half_Edge{
     Half_Edge *pair;
     Face *face;
     Half_Edge *next;
+
+    void print(){
+        std::cout << vert->v->x << "\n"<< vert->v->y << "\n" << vert->v->z << std::endl;
+    }
 };
 
 
 struct Face{
     Half_Edge *edge;
+    Vertex *v1;
+    Vertex *v2;
+    Vertex *v3;
+    std::vector<glm::vec3> verts;
+    std::vector<unsigned int> indices;
+    glm::vec3 normal;
 };
 
 class Mesh{
@@ -31,6 +42,7 @@ protected:
 
 //change this to vec3s sooner or later
     std::vector<glm::vec3> vertices;
+    std::vector<Face *> faceList;
     glm::vec3 colour;
 
     std::vector<glm::vec3> normals;
@@ -38,6 +50,8 @@ protected:
 
     bool RAY_MARCHING = false;
     bool DEBUG = false;
+
+    std::map<std::pair<unsigned int, unsigned int>, Half_Edge*> Edges; 
 
     
     GLuint meshVAO;
@@ -47,9 +61,9 @@ protected:
     GLuint indexBuffer;
     int numVertices;
 
-
+    void calcVertexNormals();
     virtual void createFaces();
-
+    std::vector<Vertex *> vertexList;
 
 public:
     
@@ -58,10 +72,10 @@ public:
     virtual void draw();
     virtual void attachMesh();
     void sortVertices(std::vector<glm::vec3> &verts);
-
+    void printNormals();
     std::vector<glm::vec3> getVertices();
     void calculateNormals();
-
+    void calculateFaceNormals();
     //setters/getters
     glm::vec3 getVertex(int index);
     void setVertex(int index, glm::vec3);
@@ -78,6 +92,8 @@ public:
 
     void print();
     void test();
+
+    void printHalfEdges();
 };
 
 #endif

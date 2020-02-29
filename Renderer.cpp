@@ -84,7 +84,7 @@ void Renderer::run(){
         
         }
         //-------------------
-        
+
         shaders->sendVec4("eye", camera->getEye());
         scene->sendLights(shaders);
         scene->draw();

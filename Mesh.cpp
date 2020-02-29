@@ -29,7 +29,24 @@ void Mesh::attachMesh(){
         }
 }
 
+void Mesh::calcVertexNormals(){
+  for(Face *f : faceList){
+      *f->v1->n += f->normal;
+      *f->v2->n += f->normal;
+      *f->v3->n += f->normal;
+    //   std::cout << "Face norm: " << glm::to_string(f->normal) << std::endl;
+    //   std::cout << glm::to_string(*f->v1->n) << std::endl;   
+  }
 
+  normals.clear();
+  for(Face *f : faceList){
+        normals.push_back(glm::normalize(*f->v1->n));
+        normals.push_back(glm::normalize(*f->v2->n));
+        normals.push_back(glm::normalize(*f->v3->n));
+
+  }
+
+}
 void Mesh::calculateNormals(){
     normals.clear();
     std::cout << "Sise of Norms : " <<normals.size() << std::endl;
@@ -56,6 +73,18 @@ void Mesh::calculateNormals(){
     std::cout << glm::to_string(vertices[indices[0]]) << std::endl;
     std::cout << glm::to_string(vertices[indices[1]]) << std::endl;
     std::cout << glm::to_string(vertices[indices[2]]) << std::endl;
+}
+
+
+void Mesh::calculateFaceNormals(){
+    for(Face *f : faceList){
+        // std::cout << f->v2->v << std::endl;;
+        // std::cout << glm::to_string(*f->v1->v) << std::endl;
+        glm::vec3 e1 = *f->v2->v - *f->v1->v;
+        glm::vec3 e2 = *f->v2->v - *f->v3->v;
+        // std::cout << glm::to_string(glm::normalize(glm::cross(e1, e2))) << std::endl;
+        f->normal = glm::normalize(glm::cross(e1, e2));
+    }
 }
 
 void Mesh::sortVertices(std::vector<glm::vec3> &verts){
@@ -152,7 +181,25 @@ void Mesh::print(){
     for(int i =0 ;i < vertices.size(); i++){
         std::cout << i << "th vertex: " << glm::to_string(vertices[i]) << std::endl;
         if(normals.size() > 0){
-            std::cout << i << "th normal: " << glm::to_string(normals[i]) << std::endl;
+            std::cout << i << "the normal: " << glm::to_string(normals[i]) << std::endl;
             }
         }
+}
+
+
+void Mesh::printNormals(){
+    for(int i = 0 ; i < normals.size(); i++){
+        std::cout << glm::to_string(normals[i]) << std::endl;
+    }
+}
+void Mesh::printHalfEdges(){
+    unsigned int i = indices[0];
+    unsigned int a = indices[1];
+    
+    std::pair<unsigned int, unsigned int> edg(i, a);
+    Half_Edge *e = Edges[edg];
+    
+    e->print();
+  
+    
 }

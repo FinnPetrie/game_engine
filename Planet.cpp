@@ -26,6 +26,9 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
     // s->calculateNormals();
 
     s->attachMesh();
+    std::cout << "Printing half edges " << std::endl;
+    //half edges result in segfault
+    s->printHalfEdges();
     // s->createFaces();
 }
 

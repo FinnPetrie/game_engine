@@ -10,5 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-
+#include <map>
+#include <utility>
+#include <fstream>
 #endif
