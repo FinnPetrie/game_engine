@@ -26,7 +26,7 @@ bool Shader::instantiate(std::string path, GLenum shaderType){
     std::string shaderCode = read(path);
     const char * code = shaderCode.c_str();
     glShaderSource(shader, 1, &code, NULL);
-    // std::cout << code << std::endl;
+    std::cout << code << std::endl;
     glCompileShader(shader);
     GLint compiled = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
