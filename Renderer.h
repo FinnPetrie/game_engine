@@ -13,7 +13,7 @@ class Renderer{
     GLenum err;
     Camera *camera;;
     // Shader *s;
-   std::vector<ShaderPipeline> shades;
+   std::vector<ShaderPipeline *> shades;
     Scene *scene;
     bool RAY_MARCH = false;
     bool DEBUG = false;

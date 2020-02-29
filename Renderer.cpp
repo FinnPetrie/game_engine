@@ -35,7 +35,7 @@ void Renderer::createShaders(){
     }
     ShaderPipeline *shaders;
     shaders = new ShaderPipeline(paths, types);
-    shades.push_back(*shaders);
+    shades.push_back(shaders);
     std::vector<std::string> geomPaths;
     geomPaths.push_back("Shaders/geoShader.vert");
     geomPaths.push_back("Shaders/shader.geom");
@@ -47,7 +47,7 @@ void Renderer::createShaders(){
     geoTypes.push_back(GL_FRAGMENT_SHADER);
     shaders = new ShaderPipeline(geomPaths, geoTypes);
     std::cout << "All compiled " << std::endl;
-    shades.push_back(*shaders);
+    shades.push_back(shaders);
 }
 
 void Renderer::run(){
@@ -61,12 +61,14 @@ void Renderer::run(){
     }
 
     glEnable(GL_DEPTH_TEST);
-    ShaderPipeline shaders = shades[0];
-    ShaderPipeline normalShader = shades[1];
+    ShaderPipeline *shaders = shades[0];
+    ShaderPipeline *normalShader;
     //generate usual scene if not ray-marching, otherwise setup Quad with size WIDTH*HEIGHT so each pixel gets a fragment 
 
     if(!RAY_MARCH){
         scene = new Scene(DEBUG);
+        normalShader = shades[1];
+
     }else{
         scene = new Scene(RAY_MARCH, DEBUG);
         std::cout << "Ray-Marching enabled" << std::endl;
@@ -83,29 +85,31 @@ void Renderer::run(){
         camera->handleMouse(w->getWindow());
         //-------------------
 
-        shaders.use();    
-        shaders.sendVec2("screenSize", glm::vec2(w->getWidth(), w->getHeight()));
+        shaders->use();    
+        shaders->sendVec2("screenSize", glm::vec2(w->getWidth(), w->getHeight()));
         //-------------------
         if(RAY_MARCH){
-            // shaders->sendVec4("eye", glm::vec4(0, 0, 5.0, 0));
-            shaders.sendMatrix("view", camera->getView());
-            shaders.sendVec3("cameraUp", camera->getUp());
-            shaders.sendVec3("cameraCentre", camera->getDirection());
+            // shaders->sendVec4("eye", glm::vec4(0, 0, 5->0, 0));
+            shaders->sendMatrix("view", camera->getView());
+            shaders->sendVec3("cameraUp", camera->getUp());
+            shaders->sendVec3("cameraCentre", camera->getDirection());
         }
         //-------------------
         if(!RAY_MARCH){
       
-        shaders.modelViewProjection(camera);
+        shaders->modelViewProjection(camera);
         }
         //-------------------
 
-        shaders.sendVec4("eye", camera->getEye());
-        scene->sendLights(&shaders);
+        shaders->sendVec4("eye", camera->getEye());
+        scene->sendLights(shaders);
         scene->draw();
         //-------------------
-        normalShader.use();
-        normalShader.modelViewProjection(camera);
+        if(!RAY_MARCH){
+        normalShader->use();
+        normalShader->modelViewProjection(camera);
         scene->draw();
+        }
         
         //-------------------
 
