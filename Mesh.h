@@ -61,7 +61,7 @@ class Mesh{
 
 
 protected:
-
+    glm::vec3 centroid;
 //change this to vec3s sooner or later
     std::vector<glm::vec3> vertices;
     std::vector<Face *> faceList;
@@ -91,6 +91,7 @@ protected:
     void calcVertexNormals();
     virtual void createFaces();
     std::vector<Vertex *> vertexList;
+    void computeCentroid();
 
 public:
     
@@ -109,7 +110,7 @@ public:
 
     void bindMesh();
     void random();
-
+    glm::vec3 getCentroid();
     void addTriIndex(GLuint i, GLuint j, GLuint k);
     void addVertex(GLfloat x, GLfloat y, GLfloat z);
     void addVertex(glm::vec3 v);

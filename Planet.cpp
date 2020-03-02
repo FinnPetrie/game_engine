@@ -21,7 +21,7 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
      
     }
     // int num = s->getSizeIndices();
-    // s->reInit(newVerts, newNormals);
+    // s->reInit(newVerts, newNormals
     // s->remapVertices(newVerts);
     // s->remapNormals(newNormals);
     // s->print();    
@@ -32,6 +32,10 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
     //half edges result in segfault
     // s->printHalfEdges();
     // s->createFaces();
+}
+
+glm::vec3 Planet::getCentroid(){
+    return s->getCentroid();
 }
 
 

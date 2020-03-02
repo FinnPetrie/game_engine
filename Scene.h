@@ -25,7 +25,7 @@ class Scene{
         Scene(bool DEBUG);
         Scene(bool RAY_MARCH, bool DEBUG);
         void draw();
-        
+        void sendCentroids(ShaderPipeline *shaders);
         std::vector<Light> getLights();
         void sendLights(ShaderPipeline *shaders);
 };

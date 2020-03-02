@@ -79,7 +79,7 @@ void ShaderPipeline::sendVec3(std::string name, glm::vec3 vector){
     GLint location = glGetUniformLocation(programID, name.c_str());
     // std::cout << "Vector: " << name << " location : " << location << std::endl;
 
-    std::cout << glm::to_string(vector) << std::endl;
+    // std::cout << glm::to_string(vector) << std::endl;
     glUniform3fv(location, 1, glm::value_ptr(vector));
 }
 

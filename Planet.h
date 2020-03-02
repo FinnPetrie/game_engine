@@ -10,7 +10,7 @@ class Planet{
         Sphere* s;
         SimplexNoise *pearl;
     public:
-
+    glm::vec3 getCentroid();
     Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG);
     void draw();
   

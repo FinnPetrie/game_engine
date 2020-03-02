@@ -40,6 +40,12 @@ void Scene::sendLights(ShaderPipeline *shaders){
     shaders->sendInt("numLights", lights.size());
 }
 
+void Scene::sendCentroids(ShaderPipeline *shader){
+   
+        shader->sendVec3("cent", planets[0].getCentroid());
+        // std::cout << glm::to_string(p.getCentroid()) << std::endl;
+    
+}
 void Scene::draw(){
 
     for(Mesh m : scene){

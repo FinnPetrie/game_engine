@@ -18,6 +18,8 @@ struct Light{
 uniform Light lights[10];
 uniform vec3 objectColour;
 
+uniform vec3 cent;
+
 const vec3 light = vec3(10, 10, 10);
 const vec3 lColour = vec3(0.5, 0.5, 0.2);
 
@@ -68,9 +70,9 @@ void main(){
     vec3 normal = normalize(vNormal);
     vec3 lightLevel = lighting(normal, 0.1, 0.0f, 32);
 
-    float length = length(vPos);
+    float length = length(vPos - cent);
     vec3 objectColour;
-    if(length > 1.0f){
+    if(length > 1.2){
 
      objectColour = vec3(0.1*length, length, 0.1*length);
     }else{

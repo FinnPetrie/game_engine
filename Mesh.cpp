@@ -6,7 +6,8 @@ Mesh::Mesh(bool r, bool DEBUG) : RAY_MARCHING(r), DEBUG(DEBUG){
 }
 
 void Mesh::attachMesh(){
-
+        computeCentroid();
+        
         std::cout << "Attaching Mesh " << std::endl;
         glGenVertexArrays(1, &meshVAO);
         glBindVertexArray(meshVAO);
@@ -29,6 +30,10 @@ void Mesh::attachMesh(){
         }
 }
 
+glm::vec3 Mesh::getCentroid(){
+    return centroid;
+}
+
 void Mesh::calcVertexNormals(){
   for(Face *f : faceList){
       for(Vertex *v : f->verts){
@@ -38,6 +43,7 @@ void Mesh::calcVertexNormals(){
      
   }
 
+
 //   std::cout << " CALC " << std::endl;
 
 //   normals.clear();
@@ -46,7 +52,6 @@ void Mesh::calcVertexNormals(){
         normals[v->index] = glm::vec3((glm::normalize(*v->n)));
      }
     }
-    
 }
 
 // void Mesh::calcHalfEdgeNormals(){
@@ -286,7 +291,20 @@ void Mesh::createHalfEdges(){
     // Mesh::calcHalfEdgeNormals();
     }
 
-    
+void Mesh::computeCentroid(){
+    glm::vec3 cent(0, 0, 0);
+    for(Vertex *v : vertexList){
+        cent += *v->v;
+        // std::cout << glm::to_string(cent) << std::endl;
+    }
+
+
+    cent.x /= float(vertexList.size());
+    cent.y /= float(vertexList.size());
+    cent.z /= float(vertexList.size());
+    std::cout << glm::to_string(cent) << std::endl;
+    this->centroid = cent;
+}
 
 void Mesh::calculateFaceNormals(){
     for(Face *f : faceList){

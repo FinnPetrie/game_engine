@@ -107,6 +107,7 @@ void Renderer::run(){
 
         shaders->sendVec4("eye", camera->getEye());
         scene->sendLights(shaders);
+        scene->sendCentroids(shaders);
         scene->draw();
         //-------------------
         if(NORMALS && !RAY_MARCH){
