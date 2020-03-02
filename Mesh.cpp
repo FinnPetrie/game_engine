@@ -38,7 +38,7 @@ void Mesh::calcVertexNormals(){
      
   }
 
-  std::cout << " CALC " << std::endl;
+//   std::cout << " CALC " << std::endl;
 
 //   normals.clear();
   for(Face *f : faceList){
@@ -76,13 +76,84 @@ void Mesh::calcVertexNormals(){
 
 // }
 
+
+void Mesh::orientate(){
+    //choose a random face
+    std::stack<Face*> faceStack;
+    std::map<Face*, bool> seenFaces;
+    std::cout << "oreinate " << std::endl;
+    int seed = 10;
+    Face* first = faceList[seed];
+    std::cout << glm::to_string(*first->verts[0]->v) << std::endl;
+    faceStack.push(first);
+    Face *f;
+    while(!faceStack.empty()){
+        
+        f = faceStack.top();
+        faceStack.pop();
+        std::cout << faceStack.size() << std::endl;
+        // std::cout << "before Adj " << std::endl;
+        if(seenFaces.find(f) == seenFaces.end()){
+            std::vector<Face *> adjacentFaces = queryFaces(f);
+            seenFaces.insert(std::pair<Face*, bool>(f, true));
+            // std::cout << "Queried Faces " << std::endl;
+            Half_Edge *e1 = f->edge;
+            Half_Edge *begin = f->edge;
+            // std::cout << "Edging" << std::endl;
+            if(e1->pair != NULL){
+                faceStack.push(e1->pair->face);
+                // std::cout << "e1: " << glm::to_string(*e1->pair->face->verts[0]->v) << std::endl;
+                if(e1->sameOrientation(e1->pair)){
+                    //flip verts
+                    e1->pair->rewind();
+                    }  
+            }
+            e1 = e1->next;
+            
+            while(e1 != begin){
+                if(e1->pair !=NULL){
+                    faceStack.push(e1->pair->face);
+                    // std::cout << "Loping " << std::endl;
+                if(e1->sameOrientation(e1->pair)){
+                    e1->pair->rewind();
+                        }
+                    }
+                e1 = e1->next;
+                }
+            }
+    }
+}
+
+std::vector<Face *> Mesh::queryFaces(Face *f){
+    // std::cout << f->edge->pair << std::endl;
+    std::vector<Face *> faces;
+    // std::cout << f << std::endl;
+    Half_Edge *traverse = f->edge;
+    Half_Edge *begin = traverse;
+
+    if(traverse->pair != NULL){
+        faces.push_back(traverse->pair->face);
+    }
+
+    traverse = traverse->next;
+
+    while(traverse != begin){
+        if(traverse->pair != NULL){
+        faces.push_back(traverse->pair->face);
+        }
+        traverse = traverse->next;
+    }
+    return faces;
+}
+
+
 void Mesh::reassignVertices(){
         std::cout << vertices.size() << std::endl;
 
     vertices.clear();
-    std::cout << vertexList.size() << std::endl;
+    // std::cout << vertexList.size() << std::endl;
     for(Vertex *v : vertexList){
-        std::cout << glm::to_string(*v->v) << std::endl;
+        // std::cout << glm::to_string(*v->v) << std::endl;
         vertices.push_back(*v->v);
     }
     indices.clear();
@@ -143,7 +214,7 @@ void Mesh::createFaces(){
 
         std::vector<Vertex *> toSort = {v1, v2, v3};
         
-        sortVertices(toSort);
+        // sortVertices(toSort);
        
         // f->indices = {indices[i], indices[i + 1], indices[i+2]};
         f->verts = std::vector<Vertex *>{toSort[0],toSort[1],toSort[2]};
@@ -182,6 +253,7 @@ void Mesh::createHalfEdges(){
             
             Edges[*edgePair] = new Half_Edge();
             Edges[*edgePair]->face = F;
+            F->edge = Edges[*edgePair];
             Edges[*edgePair]->vert = vertex;
             vertex->edge = Edges[*edgePair];
             vertexList.push_back(vertex);
@@ -193,6 +265,7 @@ void Mesh::createHalfEdges(){
             oppositeEdge = new std::pair<unsigned int, unsigned int>(F->verts[(i+1)%3]->index, F->verts[i]->index);
 
             Edges[*edgePair]->next = Edges[*nextEdge];
+            // std::cout << Edges
             if(Edges.find(*oppositeEdge) != Edges.end()){
                     Edges[*edgePair]->pair = Edges[*oppositeEdge];
                     Edges[*oppositeEdge]->pair = Edges[*edgePair];
@@ -203,6 +276,8 @@ void Mesh::createHalfEdges(){
 
     pairs.close();
     std::cout << "Closed pair " << std::endl;
+    orientate();
+    // printHalfEdges();
     Mesh::calculateFaceNormals();
     std::cout << "Vertex : norms : "<< std::endl;
     Mesh::calcVertexNormals();
@@ -212,13 +287,14 @@ void Mesh::createHalfEdges(){
     }
 
     
+
 void Mesh::calculateFaceNormals(){
     for(Face *f : faceList){
         // f->normal = new glm::vec3(0, 0, 0);
-        std::cout << "Face norms " << std::endl;
+        // std::cout << "Face norms " << std::endl;
         glm::vec3 e1 = *f->verts[1]->v - *f->verts[0]->v;
         glm::vec3 e2 = *f->verts[1]->v - *f->verts[2]->v;
-        std::cout << glm::to_string(glm::normalize(glm::cross(e1, e2))) << std::endl;
+        // std::cout << glm::to_string(glm::normalize(glm::cross(e1, e2))) << std::endl;
         f->normal = glm::normalize(glm::cross(e1, e2));
     }
 }
@@ -334,8 +410,26 @@ void Mesh::printHalfEdges(){
     
     std::pair<unsigned int, unsigned int> edg(i, a);
     Half_Edge *e = Edges[edg];
+    std::stack<Half_Edge *> edges;
+    edges.push(e);
+    std::cout << "Printing "<< std::endl;
+    while(!edges.empty()){
+        Half_Edge *t = edges.top();
+        t->print();
+        edges.pop();
+        edges.push(t->pair);
+        Half_Edge *begin = t;
+        std::cout << "T:Next " << t->next << std::endl;
+        t = t->next;
+        while(t != begin){
+            std::cout << "Going round " << std::endl;
+            if(t->pair != NULL){
+            edges.push(t->pair);
+            }
+            t = t->next;
+        }
+    }
     
-    e->print();
   
     
 }

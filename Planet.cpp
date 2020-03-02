@@ -1,10 +1,12 @@
 #include "Planet.h"
 
 Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
-    s = new Sphere(subd, 1.0f, 0.1f, DEBUG);
+    s = new Sphere(10, 1.0f, 0.1f, DEBUG);
+//    s = new Sphere(50, 50,1.0f, DEBUG);
+    //pearl = new SimplexNoise(10.0f, 3.0f, 1.25f, 0.5f);
     pearl = new SimplexNoise();
     float noise;
-    float scale = 2.0f;
+    float scale = 0.15f;
     // std::vector<glm::vec3> oldVerts = s->getVertices();
     // s->print();
     std::vector<glm::vec3> newVerts;
@@ -12,9 +14,9 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
     for(int i =0 ; i < s->getVertices().size(); i++){
         glm::vec3 v = s->getVertex(i);
         std::cout << "V was: " << glm::to_string(v) << std::endl;
-        noise = (pearl->noise((v.x*scale, v.y*scale, v.z*scale)) + 1) * 0.5f;
+        noise = (pearl->fractal(10, v.x*scale, v.y*scale, v.z*scale) + 1);
         std::cout << "Noise applied " << noise << std::endl;
-       v *= noise;
+        v *= noise;
        s->setVertex(i, v);
      
     }
@@ -28,7 +30,7 @@ Planet::Planet(int subd, double freq, size_t octaves, int seed, bool DEBUG){
     s->attachMesh();
     std::cout << "Printing half edges " << std::endl;
     //half edges result in segfault
-    s->printHalfEdges();
+    // s->printHalfEdges();
     // s->createFaces();
 }
 

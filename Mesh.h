@@ -14,16 +14,6 @@ struct Vertex{
     unsigned int index;
 };
 
-struct Half_Edge{
-    Vertex *vert;
-    Half_Edge *pair;
-    Face *face;
-    Half_Edge *next;
-
-    void print(){
-        std::cout << vert->v->x << "\n"<< vert->v->y << "\n" << vert->v->z << std::endl;
-    }
-};
 
 
 struct Face{
@@ -33,17 +23,39 @@ struct Face{
     // std::vector<unsigned int> indices;
     glm::vec3 normal;
 
-    // void calcNormal(){
-    //     normal = glm::vec3(0,)
-    //     Vertex *v = edge->vert;
-    //     Vertex *vx = edge->next->vert;
-    //     Vertex *vy = edge->next->next->vert;
-    //     glm::vec3 e1 = *vx->v - *v->v;
-    //     glm::vec3 e2 = *vx->v - *vy->v;
-
-    //     this->normal = glm::cross(e1, e2);
-    // }
+    void swapVerts(int i1, int i2){
+        Vertex v1Copy = *verts[i1];
+        
+        verts[i1] = verts[i2];
+        verts[i2] = &v1Copy;
+    }
 };
+
+struct Half_Edge{
+    Vertex *vert;
+    Half_Edge *pair;
+    Face *face;
+    Half_Edge *next;
+
+    void print(){
+        std::cout << vert->v->x << "\n"<< vert->v->y << "\n" << vert->v->z << std::endl;
+    }
+    
+    bool sameOrientation(Half_Edge *e){
+        std::cout << "Checking orientatioN! " << std::endl;
+        if(e->vert == vert){
+            std::cout << "Same orientatio! " << std::endl;
+            return true;
+        }
+        return false;
+    }
+
+    void rewind(){
+        face->swapVerts(0, 2);
+    }
+    
+};
+
 
 class Mesh{
 
@@ -57,9 +69,9 @@ protected:
     void calcHalfEdgeNormals();
     glm::vec3 faceNormal(Half_Edge *n);
     void reassignVertices();
-
+    std::vector<Face *> queryFaces(Face *f);
     void createHalfEdges();
-    
+
     std::vector<glm::vec3> normals;
     std::vector<unsigned int> indices;
 
@@ -75,7 +87,7 @@ protected:
     GLuint normalVAO;
     GLuint indexBuffer;
     int numVertices;
-
+    void orientate();
     void calcVertexNormals();
     virtual void createFaces();
     std::vector<Vertex *> vertexList;

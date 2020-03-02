@@ -13,4 +13,5 @@
 #include <map>
 #include <utility>
 #include <fstream>
+#include <stack>
 #endif

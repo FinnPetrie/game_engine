@@ -9,7 +9,7 @@ Scene::Scene(bool DEBUG){
     // Sphere *s = new Sphere(40, 40, 1);
     // Sphere *c = new Sphere(3, 1.0f, 0.1f, glm::vec3(10.0, 0, 0), DEBUG);
     // scene.push_back(*c);
-    Planet *p = new Planet(5, 45.0, 5, 4000, DEBUG);
+    Planet *p = new Planet(20, 45.0, 5, 4000, DEBUG);
     planets.push_back(*p);
     // TerrainFace *t = new TerrainFace(5, DEBUG);
     // scene.push_back(*t);

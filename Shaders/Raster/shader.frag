@@ -66,9 +66,17 @@ vec3 testLight(vec3 n, float ambientStrength, float specularStrength, float alph
 
 void main(){
     vec3 normal = normalize(vNormal);
-    vec3 lightLevel = testLight(normal, 0.5, 1.5, 32);
+    vec3 lightLevel = lighting(normal, 0.1, 0.0f, 32);
 
-    vec3 objectColour = vec3(0.5, 0.2, 0.78);
+    float length = length(vPos);
+    vec3 objectColour;
+    if(length > 1.0f){
+
+     objectColour = vec3(0.1*length, length, 0.1*length);
+    }else{
+         objectColour = vec3(0, 0, length);
+    }
+           //  objectColour = vec3(length, length, length)*5;
 
     vec3 result = lightLevel*objectColour;
     fragColour = vec4(result, 1.0);
