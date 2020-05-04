@@ -29,7 +29,7 @@ void Renderer::createShaders(){
         types.push_back(GL_FRAGMENT_SHADER);
     }else{
         paths.push_back("Shaders/Ray_March/raymarch.vert");
-        paths.push_back("Shaders/Ray_March/raymarch_julia.frag");
+        paths.push_back("Shaders/Ray_March/raymarch.frag");
         types.push_back(GL_VERTEX_SHADER);
         types.push_back(GL_FRAGMENT_SHADER);
     }
@@ -107,7 +107,10 @@ void Renderer::run(){
 
         shaders->sendVec4("eye", camera->getEye());
         scene->sendLights(shaders);
+        if(!RAY_MARCH){
         scene->sendCentroids(shaders);
+
+        }
         scene->draw();
         //-------------------
         if(NORMALS && !RAY_MARCH){

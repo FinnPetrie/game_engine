@@ -79,6 +79,9 @@ float planeDE(vec3 p, vec4 n){
      return dot(p,n.xyz) + n.w;
 }
 
+float gyroidDE(vec3 p){
+    return sin(p.x)*cos(p.y) + sin(p.y)*cos(p.z) + sin(p.z)*cos(p.x);
+}
 float juliaDE(vec3 p, vec4 translation){
     vec4 zN = vec4(p, 0.0);
     vec4 zPrime = vec4(1, 0, 0, 0);
@@ -180,7 +183,7 @@ float sceneSDF(vec3 p){
     // float bfact = smoothstep( length(p), 0, 1 );
    
     // return mix(sphereDist, planeDist, bfact);
-    float distance = DE(p);
+    float distance = gyroidDE(p);
     return distance;
 }
 
